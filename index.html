@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Portfolio Aeroespacial — Proyectos de Ingeniería</title>
+  <meta name="description" content="Portfolio de proyectos de ingeniería aeroespacial: diseño CAD, propulsión, aerodinámica y más. Proyectos extracurriculares de un estudiante de ingeniería aeroespacial." />
+  <meta name="author" content="Andreu Martí Peiró" />
+  <meta property="og:title" content="Portfolio Aeroespacial" />
+  <meta property="og:description" content="Proyectos de ingeniería aeroespacial: diseño, propulsión y aerodinámica." />
+  <meta property="og:type" content="website" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚀</text></svg>" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- Stars Background -->
+  <canvas id="stars-canvas"></canvas>
+
+  <!-- App Container -->
+  <div id="app">
+
+    <!-- Navbar -->
+    <nav class="navbar" id="navbar">
+      <div class="container">
+        <a href="#/" class="navbar-brand" id="navbar-brand">Aerospace Portfolio</a>
+        <button class="navbar-back" id="navbar-back">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="m15 18-6-6 6-6"/>
+          </svg>
+          Volver a proyectos
+        </button>
+      </div>
+    </nav>
+
+    <!-- ========== Landing View ========== -->
+    <div id="landing-view">
+
+      <!-- Hero -->
+      <section class="hero">
+        <div class="container">
+          <div class="hero-badge">
+            <span class="dot"></span>
+            Ingeniería Aeroespacial
+          </div>
+          <h1>
+            Proyectos de<br />
+            <span class="gradient-text">Ingeniería Aeroespacial</span>
+          </h1>
+          <p class="hero-subtitle">
+            Exploración práctica de diseño, propulsión y aerodinámica.
+            Proyectos realizados de forma autodidacta para profundizar
+            en las disciplinas clave del sector aeroespacial.
+          </p>
+          <div class="hero-stats">
+            <div class="hero-stat">
+              <div class="hero-stat-value" id="stat-projects">1</div>
+              <div class="hero-stat-label">Proyectos</div>
+            </div>
+            <div class="hero-stat">
+              <div class="hero-stat-value" id="stat-sections">4</div>
+              <div class="hero-stat-label">Análisis</div>
+            </div>
+            <div class="hero-stat">
+              <div class="hero-stat-value">2026</div>
+              <div class="hero-stat-label">Año</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Projects Grid -->
+      <section class="projects-section">
+        <div class="container">
+          <div class="section-header">
+            <div class="section-label">Selecciona un proyecto</div>
+            <h2 class="section-title">Mis Proyectos</h2>
+          </div>
+          <div class="projects-grid" id="projects-grid">
+            <!-- Cards rendered by app.js -->
+          </div>
+        </div>
+      </section>
+
+      <!-- Footer -->
+      <footer class="footer">
+        <div class="container">
+          <p class="footer-text">
+            Diseñado por <span class="highlight">Andreu Martí Peiró</span>, graduado en Ingeniería Aeroespacial
+          </p>
+        </div>
+      </footer>
+    </div>
+
+    <!-- ========== Project View ========== -->
+    <div id="project-view" class="project-view">
+      <div class="container">
+        <div class="project-hero" id="project-hero">
+          <!-- Rendered by app.js -->
+        </div>
+        <div class="section-tabs" id="section-tabs">
+          <!-- Rendered by app.js -->
+        </div>
+        <div id="section-content">
+          <!-- Rendered by app.js -->
+        </div>
+      </div>
+      <footer class="footer">
+        <div class="container">
+          <p class="footer-text">
+            Diseñado por <span class="highlight">Andreu Martí Peiró</span>, graduado en Ingeniería Aeroespacial
+          </p>
+        </div>
+      </footer>
+    </div>
+
+  </div>
+
+  <!-- Scripts -->
+  <script src="projects.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
