@@ -31,11 +31,11 @@ const PROJECTS = [
         id: "motor",
         title: "Análisis del Motor",
         icon: "",
-        software: ["MATLAB R2024b", "CEA (NASA)", "Excel"],
-        summary: "Análisis termodinámico de motor cohete de propelente sólido. Empuje, Isp y diseño de tobera.",
+        software: ["GasTurb 15", "MATLAB R2024b", "Excel"],
+        summary: "Análisis termodinámico del turbofán Williams F107-WR-402. Estudio de punto de diseño, paramétrico y off-design.",
         steps: [
           {
-            title: "Paso 1: Datos de Partida",
+            title: "Datos de Partida",
             description: "Condiciones ambientales y diseño termodinámico inicial para simular el motor (Williams F107-WR-402) en GasTurb.",
             contentHTML: `<div class="table-responsive">
               <table>
@@ -66,8 +66,8 @@ const PROJECTS = [
                   <tr><td>Cold Stream Mixer Press Ratio</td><td>—</td><td>0.99</td><td>Estimado</td></tr>
                   <tr><td>Mixed Stream Pressure Ratio</td><td>—</td><td>0.99</td><td>Estimado (motor compacto, ducto corto post-mixer)</td></tr>
                   <tr><td>Mixer Efficiency</td><td>—</td><td>0.95</td><td>Estimado estándar mixed exhaust</td></tr>
-                  <tr><td>Design Mixer Mach Number</td><td>—</td><td>0.4</td><td>Estimado (mixer subsónico)</td></tr>
-                  <tr><td>Design Mixer Area</td><td>m²</td><td>0.012</td><td>Estimado para empuje de 2.67 kN</td></tr>
+                  <tr><td>Design Mixer Mach Number</td><td>—</td><td>0</td><td>Estimado</td></tr>
+                  <tr><td>Design Mixer Area</td><td>m²</td><td>0.4</td><td>Estimado para empuje de 2.67 kN</td></tr>
                   <tr class="table-group-header"><td colspan="4">Secondary Air System</td></tr>
                   <tr><td>Booster(0) or HPC(1) Handl.Bleed</td><td>—</td><td>0</td><td>LPC (booster)</td></tr>
                   <tr><td>Rel. Handling Bleed to Bypass</td><td>—</td><td>0.0</td><td>Sin handling bleed</td></tr>
@@ -118,7 +118,7 @@ const PROJECTS = [
             </div>`
           },
           {
-            title: "Paso 2: Resultados Obtenidos",
+            title: "Resultados del Punto de Diseño",
             description: "Resultados numéricos de la simulación del punto de diseño en crucero a Mach 0.72. Se detalla el rendimiento general (Overall Performance), eficiencia de componentes y propiedades termodinámicas por estaciones.",
             contentHTML: `<h4 style="margin-bottom: 0.5rem; color: var(--text-primary);">Overall Performance</h4>
 <div class="table-responsive">
@@ -171,12 +171,40 @@ const PROJECTS = [
       <tr><td>St 8 (Nozzle Throat)</td><td>8.937</td><td>600.51</td><td>213.23</td><td>447.58</td><td>1.000</td><td>0.0256</td></tr>
     </tbody>
   </table>
-</div>`,
-            image: null
+</div>`
           },
           {
-            title: "Paso 3: Interpretación de Resultados",
-            description: "Aún no pondremos nada.",
+            title: "Estudio Paramétrico — Design Point",
+            description: "Análisis paramétrico del punto de diseño. Se han variado la Burner Exit Temperature (1062–1500 K) y el HP Compressor Pressure Ratio (4–10) para estudiar su efecto sobre el consumo específico (TSFC) y el empuje neto (Net Thrust).",
+            isParametricStudy: true,
+            downloadFile: "data/DatosExportados.xlsx",
+            substeps: [
+              {
+                title: "Consumo Específico (TSFC)",
+                description: "El <strong>Thrust Specific Fuel Consumption (TSFC)</strong> mide los gramos de combustible que se consumen por cada kN de empuje generado cada segundo. Es el indicador clave de eficiencia: <strong>cuanto más bajo sea el TSFC, mayor será el alcance del misil</strong>. Se estudia la variación conjunta de la temperatura de salida de la cámara de combustión (Burner Exit Temperature) y la relación de compresión del compresor HP para localizar el punto de mínimo consumo específico, donde el ciclo termodinámico Brayton opera con máxima eficiencia térmica.",
+                chartId: "chart-tsfc",
+                chartType: "surface3d",
+                chartConfig: "tsfc"
+              },
+              {
+                title: "Empuje Neto (Net Thrust)",
+                description: "El <strong>empuje neto (Net Thrust)</strong> es la fuerza útil que genera el motor para propulsar el misil, descontando las pérdidas por entrada de aire. Su valor debe igualar la resistencia aerodinámica en crucero (~2.9 kN). Este gráfico 3D revela cómo el empuje <strong>crece drásticamente con la temperatura</strong> (más energía en los gases) pero <strong>disminuye al aumentar la compresión</strong> (la turbina roba más energía para mover un compresor mayor).",
+                chartId: "chart-thrust",
+                chartType: "surface3d",
+                chartConfig: "thrust"
+              },
+              {
+                title: "Carpet Plot: Trade-Off Thrust vs TSFC",
+                description: "El <strong>Carpet Plot</strong> (o gráfico de alfombra) es la herramienta clásica en la industria aeroespacial para tomar decisiones de diseño. Combina el empuje y el consumo en un solo gráfico 2D, donde las líneas azules conectan diseños a la misma temperatura y las líneas negras conectan diseños a la misma compresión. El punto rojo marca el motor F107-WR-402: con TET = 1227 K y HP PR = 6.06, el diseño no está en el mínimo matemático absoluto de consumo (que requeriría un PR ≈ 10, inviable por tamaño), sino en el <strong>óptimo práctico</strong> que equilibra consumo, empuje requerido y restricciones geométricas del misil.",
+                chartId: "chart-carpet",
+                chartType: "carpet2d",
+                chartConfig: "carpet"
+              }
+            ]
+          },
+          {
+            title: "Estudio Off-Design",
+            description: "Próximamente: análisis del comportamiento del motor fuera de su punto de diseño (distintos Mach, altitudes y regímenes de potencia).",
             image: null
           }
         ]

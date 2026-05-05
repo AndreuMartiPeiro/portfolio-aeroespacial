@@ -148,37 +148,12 @@
 
     let stepsHTML = '';
     section.steps.forEach((step, i) => {
-      let imagesHTML = '';
-      if (step.images && step.images.length > 0) {
-        imagesHTML = step.images.map(img => `<div class="timeline-card-image" style="margin-top: 1rem;"><img src="${img}" alt="${step.title}" /></div>`).join('');
-      } else if (step.image) {
-        imagesHTML = `<div class="timeline-card-image" style="margin-top: 1rem;"><img src="${step.image}" alt="${step.title}" onerror="this.parentElement.outerHTML='<div class=\\'image-placeholder\\'><span class=\\'image-placeholder-icon\\'>—</span><span>Imagen pendiente</span></div>'" /></div>`;
+      // Check if this is the parametric study step with substeps
+      if (step.isParametricStudy) {
+        stepsHTML += renderParametricStep(step, i);
+      } else {
+        stepsHTML += renderNormalStep(step, i);
       }
-
-      const contentHTML = step.contentHTML ? `<div class="custom-html-content">${step.contentHTML}</div>` : '';
-      const descHTML = step.description ? `<p class="timeline-card-desc">${step.description}</p>` : '';
-
-      stepsHTML += `
-        <div class="timeline-item" style="animation-delay: ${0.1 + i * 0.1}s">
-          <div class="timeline-dot"></div>
-          <div class="timeline-card expandable-card">
-            <div class="timeline-card-header" onclick="this.parentElement.classList.toggle('expanded')">
-              <div>
-                <div class="timeline-step-number">Paso ${i + 1}</div>
-                <h3 class="timeline-card-title" style="margin-bottom: 0;">${step.title}</h3>
-              </div>
-              <div class="expand-icon-wrapper">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="expand-icon"><path d="m6 9 6 6 6-6"/></svg>
-              </div>
-            </div>
-            <div class="timeline-card-body">
-              ${descHTML}
-              ${contentHTML}
-              ${imagesHTML}
-            </div>
-          </div>
-        </div>
-      `;
     });
 
     container.innerHTML = `
@@ -199,6 +174,326 @@
       item.style.opacity = '0';
       requestAnimationFrame(() => { item.style.opacity = ''; });
     });
+
+    // Initialize Plotly charts after DOM is ready
+    requestAnimationFrame(() => {
+      initializeCharts(container);
+    });
+  }
+
+  // ========== Render Normal Step ==========
+  function renderNormalStep(step, i) {
+    let imagesHTML = '';
+    if (step.images && step.images.length > 0) {
+      imagesHTML = step.images.map(img => `<div class="timeline-card-image" style="margin-top: 1rem;"><img src="${img}" alt="${step.title}" /></div>`).join('');
+    } else if (step.image) {
+      imagesHTML = `<div class="timeline-card-image" style="margin-top: 1rem;"><img src="${step.image}" alt="${step.title}" onerror="this.parentElement.outerHTML='<div class=\\'image-placeholder\\'><span class=\\'image-placeholder-icon\\'>—</span><span>Imagen pendiente</span></div>'" /></div>`;
+    }
+
+    const contentHTML = step.contentHTML ? `<div class="custom-html-content">${step.contentHTML}</div>` : '';
+    const descHTML = step.description ? `<p class="timeline-card-desc">${step.description}</p>` : '';
+
+    return `
+      <div class="timeline-item" style="animation-delay: ${0.1 + i * 0.1}s">
+        <div class="timeline-dot"></div>
+        <div class="timeline-card expandable-card">
+          <div class="timeline-card-header" onclick="this.parentElement.classList.toggle('expanded')">
+            <div>
+              <div class="timeline-step-number">Paso ${i + 1}</div>
+              <h3 class="timeline-card-title" style="margin-bottom: 0;">${step.title}</h3>
+            </div>
+            <div class="expand-icon-wrapper">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="expand-icon"><path d="m6 9 6 6 6-6"/></svg>
+            </div>
+          </div>
+          <div class="timeline-card-body">
+            ${descHTML}
+            ${contentHTML}
+            ${imagesHTML}
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  // ========== Render Parametric Study Step ==========
+  function renderParametricStep(step, i) {
+    // Download box
+    const downloadHTML = step.downloadFile ? `
+      <div class="download-box">
+        <div class="download-box-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+            <polyline points="7 10 12 15 17 10"/>
+            <line x1="12" y1="15" x2="12" y2="3"/>
+          </svg>
+        </div>
+        <div class="download-box-content">
+          <div class="download-box-title">Datos del Estudio Paramétrico</div>
+          <div class="download-box-desc">Archivo Excel exportado de GasTurb con todos los datos del estudio paramétrico (Burner Exit Temperature vs HP Compressor Pressure Ratio).</div>
+        </div>
+        <a href="${step.downloadFile}" download class="download-box-btn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+            <polyline points="7 10 12 15 17 10"/>
+            <line x1="12" y1="15" x2="12" y2="3"/>
+          </svg>
+          Descargar .xlsx
+        </a>
+      </div>
+    ` : '';
+
+    // Substeps with charts
+    let substepsHTML = '';
+    if (step.substeps) {
+      step.substeps.forEach((sub, j) => {
+        substepsHTML += `
+          <div class="parametric-substep expandable-card">
+            <div class="parametric-substep-header" onclick="this.parentElement.classList.toggle('expanded')">
+              <div>
+                <div class="parametric-substep-number">${j + 1} de ${step.substeps.length}</div>
+                <h4 class="parametric-substep-title">${sub.title}</h4>
+              </div>
+              <div class="expand-icon-wrapper">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="expand-icon"><path d="m6 9 6 6 6-6"/></svg>
+              </div>
+            </div>
+            <div class="parametric-substep-body">
+              <p class="parametric-substep-desc">${sub.description}</p>
+              <div class="chart-container" id="${sub.chartId}" data-chart-type="${sub.chartType}" data-chart-config="${sub.chartConfig}"></div>
+            </div>
+          </div>
+        `;
+      });
+    }
+
+    return `
+      <div class="timeline-item" style="animation-delay: ${0.1 + i * 0.1}s">
+        <div class="timeline-dot"></div>
+        <div class="timeline-card expandable-card">
+          <div class="timeline-card-header" onclick="this.parentElement.classList.toggle('expanded')">
+            <div>
+              <div class="timeline-step-number">Paso ${i + 1}</div>
+              <h3 class="timeline-card-title" style="margin-bottom: 0;">${step.title}</h3>
+            </div>
+            <div class="expand-icon-wrapper">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="expand-icon"><path d="m6 9 6 6 6-6"/></svg>
+            </div>
+          </div>
+          <div class="timeline-card-body">
+            <p class="timeline-card-desc">${step.description}</p>
+            ${downloadHTML}
+            <div class="parametric-substeps">
+              ${substepsHTML}
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  // ========== Initialize Plotly Charts ==========
+  function initializeCharts(container) {
+    const chartContainers = container.querySelectorAll('.chart-container');
+    chartContainers.forEach(el => {
+      const type = el.dataset.chartType;
+      const config = el.dataset.chartConfig;
+
+      // Observe when the parent substep is expanded
+      const parentSubstep = el.closest('.parametric-substep');
+      const parentCard = el.closest('.timeline-card');
+      
+      // Use a MutationObserver to detect when the chart container becomes visible
+      const observer = new MutationObserver(() => {
+        if (parentSubstep && parentSubstep.classList.contains('expanded') &&
+            parentCard && parentCard.classList.contains('expanded')) {
+          if (!el.dataset.initialized) {
+            el.dataset.initialized = 'true';
+            setTimeout(() => renderChart(el, type, config), 100);
+          } else {
+            // Resize existing chart
+            try { Plotly.Plots.resize(el); } catch(e) {}
+          }
+        }
+      });
+
+      if (parentSubstep) {
+        observer.observe(parentSubstep, { attributes: true, attributeFilter: ['class'] });
+      }
+      if (parentCard) {
+        observer.observe(parentCard, { attributes: true, attributeFilter: ['class'] });
+      }
+    });
+  }
+
+  // ========== Render Individual Chart ==========
+  function renderChart(el, type, config) {
+    if (typeof Plotly === 'undefined' || typeof PARAMETRIC_DATA === 'undefined') {
+      el.innerHTML = '<p style="color: var(--text-muted); text-align: center; padding: 2rem;">Cargando datos...</p>';
+      return;
+    }
+
+    const data = PARAMETRIC_DATA;
+    const darkLayout = {
+      paper_bgcolor: 'rgba(13, 13, 13, 0)',
+      plot_bgcolor: 'rgba(26, 26, 26, 0.3)',
+      font: { family: 'Inter, sans-serif', color: '#e0ddd9', size: 12 },
+      margin: { l: 65, r: 30, t: 50, b: 65 },
+      scene: {
+        xaxis: { gridcolor: 'rgba(199,91,57,0.15)', title: { font: { size: 12 } } },
+        yaxis: { gridcolor: 'rgba(199,91,57,0.15)', title: { font: { size: 12 } } },
+        zaxis: { gridcolor: 'rgba(199,91,57,0.15)', title: { font: { size: 12 } } },
+        bgcolor: 'rgba(13,13,13,0)'
+      },
+      modebar: { bgcolor: 'transparent', color: '#9a9590', activecolor: '#c75b39' }
+    };
+
+    const plotlyConfig = {
+      responsive: true,
+      displaylogo: false,
+      modeBarButtonsToRemove: ['toImage', 'sendDataToCloud'],
+      displayModeBar: true
+    };
+
+    if (config === 'tsfc') {
+      renderSurface3D(el, data, 'TSFC', 'TSFC [g/(kN*s)]', 'Análisis Paramétrico: Consumo Específico (TSFC)',
+        [[0, '#0d47a1'], [0.25, '#1976d2'], [0.5, '#4fc3f7'], [0.75, '#fff176'], [1, '#e53935']],
+        darkLayout, plotlyConfig);
+    } else if (config === 'thrust') {
+      renderSurface3D(el, data, 'Thrust', 'Net Thrust [kN]', 'Análisis Paramétrico: Empuje Neto',
+        [[0, '#b71c1c'], [0.25, '#e65100'], [0.5, '#ff8f00'], [0.75, '#fdd835'], [1, '#fff9c4']],
+        darkLayout, plotlyConfig);
+    } else if (config === 'carpet') {
+      renderCarpetPlot(el, data, darkLayout, plotlyConfig);
+    }
+  }
+
+  // ========== 3D Surface Chart ==========
+  function renderSurface3D(el, data, zKey, zLabel, title, colorscale, layout, config) {
+    const zData = data[zKey];
+
+    const surface = {
+      type: 'surface',
+      x: data.TET,
+      y: data.PR,
+      z: zData,
+      colorscale: colorscale,
+      colorbar: {
+        title: { text: zLabel, side: 'right', font: { size: 11 } },
+        thickness: 15,
+        len: 0.75,
+        tickfont: { size: 10 }
+      },
+      lighting: { ambient: 0.6, diffuse: 0.7, specular: 0.3, roughness: 0.5 },
+      contours: {
+        z: { show: true, usecolormap: true, highlightcolor: '#fff', project: { z: false } }
+      },
+      hovertemplate: 'TET: %{x:.0f} K<br>HP PR: %{y:.2f}<br>' + zLabel + ': %{z:.3f}<extra></extra>'
+    };
+
+    // Add design point marker
+    const designMarker = {
+      type: 'scatter3d',
+      x: [data.designPoint.TET],
+      y: [data.designPoint.PR],
+      z: [zKey === 'TSFC' ? data.designPoint.TSFC : data.designPoint.Thrust],
+      mode: 'markers+text',
+      marker: { size: 6, color: '#ff1744', symbol: 'diamond' },
+      text: ['F107-WR-402'],
+      textposition: 'top center',
+      textfont: { color: '#ff1744', size: 11, family: 'Inter' },
+      hovertemplate: '<b>Punto de Diseño F107</b><br>TET: 1227 K<br>HP PR: 6.06<br>' + zLabel + ': ' +
+        (zKey === 'TSFC' ? '22.83' : '2.90') + '<extra></extra>',
+      showlegend: false
+    };
+
+    const surfaceLayout = {
+      ...layout,
+      title: { text: title, font: { size: 14, color: '#e0ddd9' }, x: 0.5 },
+      scene: {
+        ...layout.scene,
+        xaxis: { ...layout.scene.xaxis, title: 'Burner Exit Temperature [K]' },
+        yaxis: { ...layout.scene.yaxis, title: 'HP Compressor Pressure Ratio' },
+        zaxis: { ...layout.scene.zaxis, title: zLabel },
+        camera: { eye: { x: -1.5, y: -1.8, z: 0.8 } }
+      }
+    };
+
+    Plotly.newPlot(el, [surface, designMarker], surfaceLayout, config);
+  }
+
+  // ========== 2D Carpet Plot ==========
+  function renderCarpetPlot(el, data, layout, config) {
+    const traces = [];
+
+    // Lines of constant Temperature (blue)
+    for (let j = 0; j < data.TET.length; j++) {
+      const xVals = [], yVals = [];
+      for (let i = 0; i < data.PR.length; i++) {
+        xVals.push(data.Thrust[i][j]);
+        yVals.push(data.TSFC[i][j]);
+      }
+      traces.push({
+        type: 'scatter',
+        x: xVals,
+        y: yVals,
+        mode: 'lines',
+        line: { color: 'rgba(25, 118, 210, 0.6)', width: 1.2 },
+        hovertemplate: `TET = ${data.TET[j].toFixed(0)} K<br>Thrust: %{x:.3f} kN<br>TSFC: %{y:.3f} g/(kN*s)<extra></extra>`,
+        showlegend: false
+      });
+    }
+
+    // Lines of constant Pressure Ratio (dark/white)
+    for (let i = 0; i < data.PR.length; i++) {
+      const xVals = [], yVals = [];
+      for (let j = 0; j < data.TET.length; j++) {
+        xVals.push(data.Thrust[i][j]);
+        yVals.push(data.TSFC[i][j]);
+      }
+      traces.push({
+        type: 'scatter',
+        x: xVals,
+        y: yVals,
+        mode: 'lines',
+        line: { color: 'rgba(224, 221, 217, 0.4)', width: 1 },
+        hovertemplate: `HP PR = ${data.PR[i].toFixed(2)}<br>Thrust: %{x:.3f} kN<br>TSFC: %{y:.3f} g/(kN*s)<extra></extra>`,
+        showlegend: false
+      });
+    }
+
+    // Design point
+    traces.push({
+      type: 'scatter',
+      x: [data.designPoint.Thrust],
+      y: [data.designPoint.TSFC],
+      mode: 'markers+text',
+      marker: { size: 12, color: '#ff1744', symbol: 'star' },
+      text: ['  F107-WR-402 (Diseño)'],
+      textposition: 'middle right',
+      textfont: { color: '#ff1744', size: 12, family: 'Inter, sans-serif' },
+      hovertemplate: '<b>Punto de Diseño F107</b><br>Thrust: 2.90 kN<br>TSFC: 22.83 g/(kN*s)<br>TET: 1227 K<br>HP PR: 6.06<extra></extra>',
+      showlegend: false
+    });
+
+    const carpetLayout = {
+      ...layout,
+      title: { text: 'Carpet Plot: Thrust vs TSFC', font: { size: 14, color: '#e0ddd9' }, x: 0.5 },
+      xaxis: {
+        title: { text: 'Net Thrust [kN]', font: { size: 12 } },
+        gridcolor: 'rgba(199,91,57,0.12)',
+        zerolinecolor: 'rgba(199,91,57,0.2)',
+        color: '#e0ddd9'
+      },
+      yaxis: {
+        title: { text: 'Sp. Fuel Consumption [g/(kN*s)]', font: { size: 12 } },
+        gridcolor: 'rgba(199,91,57,0.12)',
+        zerolinecolor: 'rgba(199,91,57,0.2)',
+        color: '#e0ddd9'
+      }
+    };
+
+    Plotly.newPlot(el, traces, carpetLayout, config);
   }
 
   // ========== Navigation ==========

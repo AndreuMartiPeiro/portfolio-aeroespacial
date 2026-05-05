@@ -790,6 +790,191 @@ img { max-width: 100%; height: auto; display: block; }
 }
 
 /* ============================================
+   DOWNLOAD BOX
+   ============================================ */
+.download-box {
+  display: flex;
+  align-items: center;
+  gap: var(--space-lg);
+  padding: var(--space-lg);
+  margin: var(--space-lg) 0;
+  background: rgba(199, 91, 57, 0.04);
+  border: 1px solid rgba(199, 91, 57, 0.2);
+  border-radius: var(--radius-md);
+  transition: border-color var(--transition-base), box-shadow var(--transition-base);
+}
+
+.download-box:hover {
+  border-color: rgba(199, 91, 57, 0.4);
+  box-shadow: 0 0 20px rgba(199, 91, 57, 0.08);
+}
+
+.download-box-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  min-width: 48px;
+  background: rgba(199, 91, 57, 0.12);
+  border-radius: var(--radius-sm);
+  color: var(--accent-cyan);
+}
+
+.download-box-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.download-box-title {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--text-primary);
+  margin-bottom: 2px;
+}
+
+.download-box-desc {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+.download-box-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-sm) var(--space-lg);
+  background: var(--gradient-accent);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+  text-decoration: none;
+}
+
+.download-box-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(199, 91, 57, 0.3);
+  color: #fff;
+}
+
+/* ============================================
+   PARAMETRIC SUBSTEPS
+   ============================================ */
+.parametric-substeps {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  margin-top: var(--space-lg);
+}
+
+.parametric-substep {
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(199, 91, 57, 0.1);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  transition: border-color var(--transition-base);
+}
+
+.parametric-substep:hover {
+  border-color: rgba(199, 91, 57, 0.25);
+}
+
+.parametric-substep-header {
+  padding: var(--space-md) var(--space-lg);
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  user-select: none;
+  transition: background var(--transition-fast);
+}
+
+.parametric-substep-header:hover {
+  background: rgba(199, 91, 57, 0.04);
+}
+
+.parametric-substep-body {
+  display: none;
+  padding: 0 var(--space-lg) var(--space-lg);
+}
+
+.parametric-substep.expanded .parametric-substep-body {
+  display: block;
+  animation: fadeIn 0.3s ease;
+}
+
+.parametric-substep.expanded .parametric-substep-header {
+  border-bottom: 1px solid rgba(199, 91, 57, 0.1);
+  padding-bottom: var(--space-md);
+  margin-bottom: var(--space-md);
+}
+
+.parametric-substep.expanded .expand-icon-wrapper {
+  transform: rotate(180deg);
+}
+
+.parametric-substep-number {
+  font-family: var(--font-display);
+  font-size: 0.65rem;
+  color: var(--accent-cyan);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 2px;
+  opacity: 0.8;
+}
+
+.parametric-substep-title {
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.parametric-substep-desc {
+  color: var(--text-secondary);
+  font-size: 0.88rem;
+  line-height: 1.7;
+  margin-bottom: var(--space-lg);
+}
+
+/* ============================================
+   CHART CONTAINERS (Plotly)
+   ============================================ */
+.chart-container {
+  width: 100%;
+  min-height: 480px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
+  background: rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+}
+
+/* Override Plotly modebar styling to match dark theme */
+.chart-container .modebar-group {
+  background: transparent !important;
+}
+
+.chart-container .modebar-btn {
+  color: var(--text-muted) !important;
+}
+
+.chart-container .modebar-btn:hover {
+  color: var(--accent-cyan) !important;
+}
+
+.chart-container .modebar-btn.active {
+  color: var(--accent-cyan) !important;
+}
+
+/* ============================================
    FOOTER
    ============================================ */
 .footer {
@@ -864,6 +1049,9 @@ img { max-width: 100%; height: auto; display: block; }
   .timeline { padding-left: var(--space-xl); }
   .timeline-dot { left: calc(-1 * var(--space-xl) + 4px); }
   .timeline-card-image, .image-placeholder { height: 160px; }
+  .download-box { flex-direction: column; text-align: center; }
+  .download-box-btn { width: 100%; justify-content: center; }
+  .chart-container { min-height: 350px; }
 }
 
 @media (max-width: 480px) {
