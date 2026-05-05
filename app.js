@@ -148,20 +148,34 @@
 
     let stepsHTML = '';
     section.steps.forEach((step, i) => {
-      const imageHTML = step.image
-        ? `<div class="timeline-card-image"><img src="${step.image}" alt="${step.title}" onerror="this.parentElement.outerHTML='<div class=\\'image-placeholder\\'><span class=\\'image-placeholder-icon\\'>—</span><span>Imagen pendiente</span></div>'" /></div>`
-        : '';
+      let imagesHTML = '';
+      if (step.images && step.images.length > 0) {
+        imagesHTML = step.images.map(img => `<div class="timeline-card-image" style="margin-top: 1rem;"><img src="${img}" alt="${step.title}" /></div>`).join('');
+      } else if (step.image) {
+        imagesHTML = `<div class="timeline-card-image" style="margin-top: 1rem;"><img src="${step.image}" alt="${step.title}" onerror="this.parentElement.outerHTML='<div class=\\'image-placeholder\\'><span class=\\'image-placeholder-icon\\'>—</span><span>Imagen pendiente</span></div>'" /></div>`;
+      }
+
+      const contentHTML = step.contentHTML ? `<div class="custom-html-content">${step.contentHTML}</div>` : '';
+      const descHTML = step.description ? `<p class="timeline-card-desc">${step.description}</p>` : '';
 
       stepsHTML += `
         <div class="timeline-item" style="animation-delay: ${0.1 + i * 0.1}s">
           <div class="timeline-dot"></div>
-          <div class="timeline-card">
-            <div class="timeline-card-body">
-              <div class="timeline-step-number">Paso ${i + 1}</div>
-              <h3 class="timeline-card-title">${step.title}</h3>
-              <p class="timeline-card-desc">${step.description}</p>
+          <div class="timeline-card expandable-card">
+            <div class="timeline-card-header" onclick="this.parentElement.classList.toggle('expanded')">
+              <div>
+                <div class="timeline-step-number">Paso ${i + 1}</div>
+                <h3 class="timeline-card-title" style="margin-bottom: 0;">${step.title}</h3>
+              </div>
+              <div class="expand-icon-wrapper">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="expand-icon"><path d="m6 9 6 6 6-6"/></svg>
+              </div>
             </div>
-            ${imageHTML}
+            <div class="timeline-card-body">
+              ${descHTML}
+              ${contentHTML}
+              ${imagesHTML}
+            </div>
           </div>
         </div>
       `;

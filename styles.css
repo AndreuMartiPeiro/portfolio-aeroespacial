@@ -633,8 +633,41 @@ img { max-width: 100%; height: auto; display: block; }
   box-shadow: var(--shadow-glow);
 }
 
-.timeline-card-body {
+.timeline-card-header {
   padding: var(--space-lg);
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  user-select: none;
+}
+
+.timeline-card-body {
+  padding: 0 var(--space-lg) var(--space-lg);
+  display: none;
+}
+
+.expandable-card.expanded .timeline-card-body {
+  display: block;
+  animation: fadeIn 0.3s ease;
+}
+
+.expandable-card.expanded .timeline-card-header {
+  border-bottom: 1px solid rgba(199, 91, 57, 0.1);
+  padding-bottom: var(--space-md);
+  margin-bottom: var(--space-md);
+}
+
+.expand-icon-wrapper {
+  color: var(--text-muted);
+  transition: transform var(--transition-base);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.expandable-card.expanded .expand-icon-wrapper {
+  transform: rotate(180deg);
 }
 
 .timeline-step-number {
@@ -659,11 +692,64 @@ img { max-width: 100%; height: auto; display: block; }
   line-height: 1.7;
 }
 
+.custom-html-content {
+  margin-top: var(--space-md);
+}
+
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+  margin-bottom: var(--space-md);
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
+}
+
+.custom-html-content table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  text-align: left;
+}
+
+.custom-html-content th {
+  background: rgba(199, 91, 57, 0.1);
+  color: var(--accent-cyan);
+  font-weight: 600;
+  padding: var(--space-sm) var(--space-md);
+  border-bottom: 1px solid var(--border-color);
+  white-space: nowrap;
+}
+
+.custom-html-content td {
+  padding: var(--space-sm) var(--space-md);
+  border-bottom: 1px solid rgba(199, 91, 57, 0.05);
+}
+
+.custom-html-content tr:last-child td {
+  border-bottom: none;
+}
+
+.custom-html-content tr:hover td {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.custom-html-content tr.table-group-header td {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-primary);
+  font-weight: 600;
+  text-align: center;
+  font-size: 0.95rem;
+  padding: var(--space-sm);
+  border-bottom: 1px solid var(--border-color);
+}
+
 .timeline-card-image {
   width: 100%;
-  height: 220px;
+  border-radius: var(--radius-md);
   overflow: hidden;
-  border-top: 1px solid var(--border-color);
+  border: 1px solid var(--border-color);
   background: var(--bg-secondary);
 }
 

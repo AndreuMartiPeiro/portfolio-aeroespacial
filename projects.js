@@ -34,11 +34,151 @@ const PROJECTS = [
         software: ["MATLAB R2024b", "CEA (NASA)", "Excel"],
         summary: "Análisis termodinámico de motor cohete de propelente sólido. Empuje, Isp y diseño de tobera.",
         steps: [
-          { title: "Selección del propelente", description: "Composición AP/HTPB/Al (68/14/18). Isp teórico ~260 s. Estudio comparativo de propelentes sólidos.", image: "img/motor_propelente.png" },
-          { title: "Termodinámica de combustión", description: "Software CEA de NASA: T cámara ~3300 K, γ ≈ 1.17. Cálculo de propiedades de gases de combustión.", image: "img/motor_cea.png" },
-          { title: "Diseño de la tobera", description: "Tobera convergente-divergente De Laval. Garganta 25 mm, salida 45 mm. Contorno por método de características.", image: "img/motor_tobera.png" },
-          { title: "Curva de empuje", description: "Simulación MATLAB: empuje medio 2500 N, tiempo de combustión 4.5 s. Grano en geometría estrella de 5 puntas.", image: "img/motor_empuje.png" },
-          { title: "Integridad estructural", description: "Presión de cámara 6.5 MPa, casing AISI 4130 con FS=2.5. Aislamiento ablativo de sílice fenólica.", image: "img/motor_estructura.png" }
+          {
+            title: "Paso 1: Datos de Partida",
+            description: "Condiciones ambientales y diseño termodinámico inicial para simular el motor (Williams F107-WR-402) en GasTurb.",
+            contentHTML: `<div class="table-responsive">
+              <table>
+                <thead><tr><th>Property</th><th>Unit</th><th>Value</th><th>Fuente</th></tr></thead>
+                <tbody>
+                  <tr class="table-group-header"><td colspan="4">Basic Data</td></tr>
+                  <tr><td>Intake Pressure Ratio</td><td>—</td><td>0.97</td><td>Estimado (inlet anular, vuelo subsónico)</td></tr>
+                  <tr><td>No (0) or Average (1) Core dP/P</td><td>—</td><td>0</td><td>Estándar para este tipo</td></tr>
+                  <tr><td>Inner Fan Pressure Ratio</td><td>—</td><td>2.30</td><td>Estimado (fan 2 etapas + booster 2 etapas, 4 etapas LP total → OPR=13.8)</td></tr>
+                  <tr><td>Booster Map Type (0/1/2)</td><td>—</td><td>0</td><td>Off-design, estándar</td></tr>
+                  <tr><td>Outer Fan Pressure Ratio</td><td>—</td><td>2.30</td><td>Igual al inner (fan sin dividir en GasTurb, BPR=1)</td></tr>
+                  <tr><td>Compr. Interduct Press. Ratio</td><td>—</td><td>0.99</td><td>Estimado (pérdidas mínimas)</td></tr>
+                  <tr><td>HP Compressor Pressure Ratio</td><td>—</td><td>6.06</td><td>Estimado → OPR total ≈ 13.8 (OFICIAL)</td></tr>
+                  <tr><td>Bypass Duct Pressure Ratio</td><td>—</td><td>0.99</td><td>Estimado (ducto corto, motor compacto)</td></tr>
+                  <tr><td>Turb. Interd. Ref. Press. Ratio</td><td>—</td><td>0.99</td><td>Estimado estándar</td></tr>
+                  <tr><td>Design Bypass Ratio</td><td>—</td><td>1.0</td><td>OFICIAL</td></tr>
+                  <tr><td>Burner Exit Temperature</td><td>K</td><td>1227</td><td>OFICIAL (954°C = 1227 K)</td></tr>
+                  <tr><td>Burner Design Efficiency</td><td>—</td><td>0.99</td><td>Estimado estándar</td></tr>
+                  <tr><td>Burner Partload Constant</td><td>—</td><td>1.5</td><td>Estimado, off-design only</td></tr>
+                  <tr><td>Fuel Heating Value</td><td>MJ/kg</td><td>43.5</td><td>JP-10 / high-density fuel del Tomahawk</td></tr>
+                  <tr><td>Overboard Bleed</td><td>kg/s</td><td>0.0</td><td>Motor de misil, sin sangrado externo</td></tr>
+                  <tr><td>Power Offtake</td><td>kW</td><td>0.5</td><td>Mínimo (solo alternador del gearbox)</td></tr>
+                  <tr><td>HP Spool Mechanical Efficiency</td><td>—</td><td>0.995</td><td>Estimado estándar small engine</td></tr>
+                  <tr><td>LP Spool Mechanical Efficiency</td><td>—</td><td>0.995</td><td>Estimado estándar small engine</td></tr>
+                  <tr><td>Burner Pressure Ratio</td><td>—</td><td>0.96</td><td>Estimado (combustor anular compacto, 4% pérdida)</td></tr>
+                  <tr><td>Turbine Exit Duct Press Ratio</td><td>—</td><td>0.99</td><td>Estimado</td></tr>
+                  <tr><td>Hot Stream Mixer Press Ratio</td><td>—</td><td>0.99</td><td>Estimado</td></tr>
+                  <tr><td>Cold Stream Mixer Press Ratio</td><td>—</td><td>0.99</td><td>Estimado</td></tr>
+                  <tr><td>Mixed Stream Pressure Ratio</td><td>—</td><td>0.99</td><td>Estimado (motor compacto, ducto corto post-mixer)</td></tr>
+                  <tr><td>Mixer Efficiency</td><td>—</td><td>0.95</td><td>Estimado estándar mixed exhaust</td></tr>
+                  <tr><td>Design Mixer Mach Number</td><td>—</td><td>0.4</td><td>Estimado (mixer subsónico)</td></tr>
+                  <tr><td>Design Mixer Area</td><td>m²</td><td>0.012</td><td>Estimado para empuje de 2.67 kN</td></tr>
+                  <tr class="table-group-header"><td colspan="4">Secondary Air System</td></tr>
+                  <tr><td>Booster(0) or HPC(1) Handl.Bleed</td><td>—</td><td>0</td><td>LPC (booster)</td></tr>
+                  <tr><td>Rel. Handling Bleed to Bypass</td><td>—</td><td>0.0</td><td>Sin handling bleed</td></tr>
+                  <tr><td>Rel. Enthalpy of HP Handl.Bleed</td><td>—</td><td>0.5</td><td>Estándar</td></tr>
+                  <tr><td>Rel. HP Leakage to Bypass</td><td>—</td><td>0.005</td><td>Fugas mínimas estimadas</td></tr>
+                  <tr><td>Rel. Overboard Bleed W_Bld/W25</td><td>—</td><td>0.0</td><td>Sin sangrado</td></tr>
+                  <tr><td>Rel. Enthalpy of Overb. Bleed</td><td>—</td><td>0.5</td><td>Estándar</td></tr>
+                  <tr><td>Recirculating Bleed W_reci/W25</td><td>—</td><td>0.0</td><td>Off-design only, sin recirculación</td></tr>
+                  <tr><td>Rel. Enthalpy of Recirc Bleed</td><td>—</td><td>0.5</td><td>Estándar</td></tr>
+                  <tr><td>Number of HP Turbine Stages</td><td>—</td><td>1</td><td>OFICIAL</td></tr>
+                  <tr><td>HPT NGV 1 Cooling Air / W25</td><td>—</td><td>0.0</td><td>OFICIAL (turbina uncooled)</td></tr>
+                  <tr><td>HPT Rotor 1 Cooling Air / W25</td><td>—</td><td>0.0</td><td>OFICIAL (turbina uncooled)</td></tr>
+                  <tr><td>HPT Cooling Air Pumping Dia</td><td>m</td><td>0.08</td><td>Estimado geométrico</td></tr>
+                  <tr><td>Number of LP Turbine Stages</td><td>—</td><td>2</td><td>OFICIAL</td></tr>
+                  <tr><td>LPT NGV 1 Cooling Air / W25</td><td>—</td><td>0.0</td><td>Sin refrigeración</td></tr>
+                  <tr><td>LPT Rotor 1 Cooling Air / W25</td><td>—</td><td>0.0</td><td>Sin refrigeración</td></tr>
+                  <tr><td>Rel. Enth. LPT NGV Cooling Air</td><td>—</td><td>0.5</td><td>Estándar</td></tr>
+                  <tr><td>Rel. Enth. of LPT Cooling Air</td><td>—</td><td>0.5</td><td>Estándar</td></tr>
+                  <tr><td>Rel. HP Leakage to LPT exit</td><td>—</td><td>0.003</td><td>Fugas mínimas estimadas</td></tr>
+                  <tr><td>Rel. Fan Overb. Bleed W_Bld/W13</td><td>—</td><td>0.0</td><td>Sin sangrado de fan</td></tr>
+                  <tr><td>Core-Byp Heat Transf Effectiven</td><td>—</td><td>0.0</td><td>Sin transferencia de calor</td></tr>
+                  <tr><td>Coolg Air Cooling Effectiveness</td><td>—</td><td>0.7</td><td>Estándar (aunque no hay cooling)</td></tr>
+                  <tr><td>Bleed Air Cooling Effectiveness</td><td>—</td><td>0.7</td><td>Estándar</td></tr>
+                  <tr class="table-group-header"><td colspan="4">Ambient Conditions</td></tr>
+                  <tr><td>Total Temperature T1</td><td>K</td><td>291.5</td><td>Mach 0.72 a baja altitud</td></tr>
+                  <tr><td>Total Pressure P1</td><td>kPa</td><td>116.5</td><td>Mach 0.72 a baja altitud</td></tr>
+                  <tr><td>Ambient Pressure Pamb</td><td>kPa</td><td>101.0</td><td>Mach 0.72 a baja altitud</td></tr>
+                  <tr><td>Relative Humidity [%]</td><td>—</td><td>0</td><td>Mach 0.72 a baja altitud</td></tr>
+                  <tr class="table-group-header"><td colspan="4">Mass Flow</td></tr>
+                  <tr><td>Inlet Corr. Flow W2Rstd</td><td>kg/s</td><td>8.0</td><td>Estimado para empuje ~2.9 kN con BPR=1</td></tr>
+                  <tr class="table-group-header"><td colspan="4">LPC / Fan Design</td></tr>
+                  <tr><td>Nominal LP Spool Speed</td><td>RPM</td><td>35500</td><td>OFICIAL</td></tr>
+                  <tr class="table-group-header"><td colspan="4">LPC / Fan Efficiencies</td></tr>
+                  <tr><td>Inner LPC Isentr. Efficiency</td><td>—</td><td>0.84</td><td>Estimado (4 etapas axiales LP, ajustado)</td></tr>
+                  <tr><td>Outer LPC Isentr. Efficiency</td><td>—</td><td>0.88</td><td>Estimado</td></tr>
+                  <tr class="table-group-header"><td colspan="4">HPC Efficiency</td></tr>
+                  <tr><td>Isentr. HPC Efficiency</td><td>—</td><td>0.82</td><td>Estimado (compresor centrífugo, ajustado)</td></tr>
+                  <tr class="table-group-header"><td colspan="4">HPC Design</td></tr>
+                  <tr><td>Nominal HP Spool Speed</td><td>RPM</td><td>60000</td><td>Estimado (centrífugo pequeño, RPM alta típica)</td></tr>
+                  <tr class="table-group-header"><td colspan="4">Nozzle</td></tr>
+                  <tr><td>Nozzle Thrust Coefficient</td><td>—</td><td>0.985</td><td>Estimado estándar tobera convergente</td></tr>
+                  <tr><td>Design Nozzle Petal Angle [deg]</td><td>—</td><td>12</td><td>Estimado estándar</td></tr>
+                  <tr class="table-group-header"><td colspan="4">Turbine Efficiencies</td></tr>
+                  <tr><td>Isentr. HPT Efficiency</td><td>—</td><td>0.87</td><td>Estimado (1 etapa axial uncooled, ajustado)</td></tr>
+                  <tr><td>Isentr. LPT Efficiency</td><td>—</td><td>0.89</td><td>Estimado (2 etapas axiales, ajustado)</td></tr>
+                </tbody>
+              </table>
+            </div>`
+          },
+          {
+            title: "Paso 2: Resultados Obtenidos",
+            description: "Resultados numéricos de la simulación del punto de diseño en crucero a Mach 0.72. Se detalla el rendimiento general (Overall Performance), eficiencia de componentes y propiedades termodinámicas por estaciones.",
+            contentHTML: `<h4 style="margin-bottom: 0.5rem; color: var(--text-primary);">Overall Performance</h4>
+<div class="table-responsive">
+  <table>
+    <thead><tr><th>Parameter</th><th>Value</th><th>Unit</th></tr></thead>
+    <tbody>
+      <tr><td>Net Thrust (FN)</td><td>2.90</td><td>kN</td></tr>
+      <tr><td>Thrust Specific Fuel Consumption (TSFC)</td><td>22.8266</td><td>g/(kN*s)</td></tr>
+      <tr><td>Fuel Flow (WF Burner)</td><td>0.06628</td><td>kg/s</td></tr>
+      <tr><td>Bypass Ratio (BPR)</td><td>1.0000</td><td>-</td></tr>
+      <tr><td>Core Efficiency</td><td>0.3750</td><td>-</td></tr>
+      <tr><td>Propulsive Efficiency</td><td>0.4859</td><td>-</td></tr>
+      <tr><td>Overall Pressure Ratio (P3/P2)</td><td>14.225</td><td>-</td></tr>
+      <tr><td>Nozzle Area (A8)</td><td>0.02619</td><td>m²</td></tr>
+      <tr><td>Nozzle Pressure Ratio (P8/Pamb)</td><td>2.11119</td><td>-</td></tr>
+      <tr><td>Power Offtake (PWX)</td><td>0.5</td><td>kW</td></tr>
+    </tbody>
+  </table>
+</div>
+<h4 style="margin-bottom: 0.5rem; margin-top: 1.5rem; color: var(--text-primary);">Component Efficiencies</h4>
+<div class="table-responsive">
+  <table>
+    <thead><tr><th>Component</th><th>Isentropic</th><th>Polytropic</th><th>Pressure Ratio (P/P)</th></tr></thead>
+    <tbody>
+      <tr><td>Outer LPC</td><td>0.8600</td><td>0.8753</td><td>2.300</td></tr>
+      <tr><td>Inner LPC</td><td>0.8600</td><td>0.8753</td><td>2.300</td></tr>
+      <tr><td>HP Compressor</td><td>0.8200</td><td>0.8576</td><td>6.060</td></tr>
+      <tr><td>Burner</td><td>0.9900</td><td>-</td><td>0.960</td></tr>
+      <tr><td>HP Turbine</td><td>0.8700</td><td>0.8526</td><td>3.235</td></tr>
+      <tr><td>LP Turbine</td><td>0.8900</td><td>0.8793</td><td>2.274</td></tr>
+      <tr><td>Mixer</td><td>0.9700</td><td>-</td><td>-</td></tr>
+    </tbody>
+  </table>
+</div>
+<h4 style="margin-bottom: 0.5rem; margin-top: 1.5rem; color: var(--text-primary);">Station Properties</h4>
+<div class="table-responsive">
+  <table>
+    <thead><tr><th>Station</th><th>Mass Flow (kg/s)</th><th>Total Temp (K)</th><th>Total Press (kPa)</th><th>Velocity (m/s)</th><th>Mach Number</th><th>Area (m²)</th></tr></thead>
+    <tbody>
+      <tr><td>St 2 (Fan Inlet)</td><td>8.871</td><td>291.50</td><td>113.00</td><td>167.01</td><td>0.500</td><td>0.0444</td></tr>
+      <tr><td>St 21 (Fan Exit Inner)</td><td>4.435</td><td>382.28</td><td>267.95</td><td>191.07</td><td>0.500</td><td>0.0107</td></tr>
+      <tr><td>St 13 (Fan Exit Outer)</td><td>4.435</td><td>382.28</td><td>251.87</td><td>154.16</td><td>0.400</td><td>0.0136</td></tr>
+      <tr><td>St 3 (HPC Exit)</td><td>4.435</td><td>684.54</td><td>1607.54</td><td>103.26</td><td>0.200</td><td>0.0054</td></tr>
+      <tr><td>St 4 (Burner Exit)</td><td>4.466</td><td>1227.00</td><td>1543.24</td><td>202.62</td><td>0.300</td><td>0.0053</td></tr>
+      <tr><td>St 44 (HPT Exit)</td><td>4.466</td><td>962.68</td><td>477.08</td><td>268.58</td><td>0.450</td><td>0.0106</td></tr>
+      <tr><td>St 5 (LPT Exit)</td><td>4.466</td><td>802.94</td><td>207.67</td><td>272.79</td><td>0.500</td><td>0.0205</td></tr>
+      <tr><td>St 6 (Mixer Core In)</td><td>4.479</td><td>802.61</td><td>205.60</td><td>120.30</td><td>0.217</td><td>0.0427</td></tr>
+      <tr><td>St 16 (Mixer Byp In)</td><td>4.458</td><td>383.82</td><td>249.35</td><td>108.97</td><td>0.280</td><td>0.0188</td></tr>
+      <tr><td>St 64 (Mixer Exit)</td><td>8.937</td><td>600.51</td><td>215.38</td><td>193.76</td><td>0.404</td><td>0.0400</td></tr>
+      <tr><td>St 8 (Nozzle Throat)</td><td>8.937</td><td>600.51</td><td>213.23</td><td>447.58</td><td>1.000</td><td>0.0256</td></tr>
+    </tbody>
+  </table>
+</div>`,
+            image: null
+          },
+          {
+            title: "Paso 3: Interpretación de Resultados",
+            description: "Aún no pondremos nada.",
+            image: null
+          }
         ]
       },
       {
