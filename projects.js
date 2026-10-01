@@ -236,5 +236,22 @@ const PROJECTS = [
         ]
       }
     ]
+  },
+  {
+    id: "zaragoza",
+    title: "Demanda del Aeropuerto de Zaragoza",
+    subtitle: "Previsión de pasajeros a 2050 y dimensionamiento de pista a partir de datos de Aena (2004-2026)",
+    description: "Análisis de 268 meses de tráfico: tendencia, estacionalidad, elasticidad frente al PIB, escenarios a 2050 y cálculo de la hora punta de diseño. Con simulador interactivo.",
+    tags: ["Planificación aeroportuaria", "Excel", "Series temporales", "Econometría"],
+    image: "img/zaragoza_hero.svg",
+    status: "Completado",
+    date: "2026",
+    sections: [
+      { id: "historico", custom: "historico", title: "Evolución histórica", software: ["Excel", "Datos Aena"], summary: "Serie mensual oficial de Aena de salidas, llegadas y pasajeros totales entre enero de 2004 y abril de 2026." },
+      { id: "estacionalidad", custom: "estacionalidad", title: "Estacionalidad", software: ["Media móvil 12 meses"], summary: "El índice estacional separa el patrón del calendario (verano, Navidad) del crecimiento real del aeropuerto." },
+      { id: "pib", custom: "pib", title: "Relación con el PIB", software: ["Regresión log-log"], summary: "La elasticidad cuantifica cuánto crece el tráfico por cada 1 % de crecimiento económico." },
+      { id: "prevision", custom: "prevision", title: "Simulador 2050", software: ["Escenarios", "Hora punta"], summary: "Mueve las hipótesis y observa en tiempo real la demanda de 2050, la hora punta de diseño y la ocupación de la pista." },
+      { id: "conclusiones-zgz", custom: "conclusiones", title: "Conclusiones", software: [], summary: "Qué se consigue con el análisis, qué ha pasado después y qué conviene revisar en los datos." }
+    ]
   }
 ];

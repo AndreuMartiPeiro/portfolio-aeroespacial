@@ -146,8 +146,24 @@
       ? `<div class="software-list">${section.software.map(s => `<span class="software-badge">${s}</span>`).join('')}</div>`
       : '';
 
+    // Secciones con renderizado propio (p. ej. proyecto de Zaragoza)
+    if (section.custom && window.ZGZ_SECTIONS && window.ZGZ_SECTIONS[section.custom]) {
+      container.innerHTML = `
+        <div class="section-content">
+          <div class="section-content-header">
+            <h2 class="section-content-title">${section.title}</h2>
+            <p class="section-content-summary">${section.summary}</p>
+            ${softwareHTML}
+          </div>
+          <div class="zgz" id="zgz-host"></div>
+        </div>
+      `;
+      window.ZGZ_SECTIONS[section.custom](container.querySelector('#zgz-host'));
+      return;
+    }
+
     let stepsHTML = '';
-    section.steps.forEach((step, i) => {
+    (section.steps || []).forEach((step, i) => {
       // Check if this is the parametric study step with substeps
       if (step.isParametricStudy) {
         stepsHTML += renderParametricStep(step, i);
