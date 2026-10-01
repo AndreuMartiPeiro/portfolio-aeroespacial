@@ -634,6 +634,54 @@
         <div class="zp-chart" id="zp-proj"></div>
         <p class="zp-note" id="zp-scen-note"></p>
       </div>
+      <div class="zp-panel zp-reveal" id="zp-pib-panel">
+        <div class="zp-panel-head">
+          <h3>Relación con el PIB</h3>
+          ${info(`<p><b>Qué se quiere comprobar.</b> Antes de usar el PIB para prever el tráfico hay que comprobar que ambas magnitudes están relacionadas y medir cuánto. Cada punto es un trimestre, con el logaritmo del PIB en horizontal y el del tráfico en vertical: si el tráfico dependiera del PIB, los puntos se alinearían en una recta ascendente.</p>
+            <p><b>Por qué logaritmos.</b> Interesa en qué porcentaje aumenta el tráfico cuando el PIB aumenta un porcentaje dado. En escala logarítmica las distancias son variaciones porcentuales, así que la pendiente es directamente la elasticidad, sin que influyan las unidades.</p>
+            <p><b>Media móvil trimestral.</b> Es la gráfica de la que sale la elasticidad (78 trimestres sin pandemia). Se usa la media móvil, sin estacionalidad, para que las diferencias verano-invierno no ensanchen la nube. Pendiente: 1,07. La nube es muy dispersa: el PIB explica solo parte de la variación.</p>
+            <p><b>Tráfico anual móvil (TAM).</b> Suma cuatro trimestres consecutivos, es decir, un año completo. Reduce las fluctuaciones y sirve de contraste: si la relación positiva se mantiene con otra forma de medir el tráfico, no es casual. El Excel solo la representa; la elasticidad usada es la de la media móvil.</p>`)}
+        </div>
+        <div class="zp-controls">
+          ${seg('pibv', [{ value: 'mm', label: 'Media móvil trimestral' }, { value: 'tam', label: 'Tráfico anual móvil (TAM)' }], 'mm')}
+          <label class="zp-check"><input type="checkbox" id="zp-pib-x"> Excluir 2025 T4 (parcial)</label>
+        </div>
+        <div class="zp-grid-side">
+          <div class="zp-chart" id="zp-pib"></div>
+          <div class="zp-side">
+            <div class="zp-kpi hl"><b id="zp-pib-e">0</b><span>Pendiente (elasticidad)</span></div>
+            <div class="zp-kpi"><b id="zp-pib-r2">0</b><span>R²</span></div>
+            <div class="zp-kpi"><b>1,55 %</b><span>CAGR del PIB 2004–2025</span></div>
+            <p class="zp-note" id="zp-pib-txt"></p>
+          </div>
+        </div>
+      </div>
+
+      <div class="zp-panel zp-reveal" id="zp-hp-panel">
+        <div class="zp-panel-head">
+          <h3>Hora punta en 2050</h3>
+          ${info(`<p><b>Cómo leer la tabla.</b> MMT son los pasajeros del mes en 2050, DMT los de un día medio de ese mes y HDP los de la hora punta de ese día, para cada escenario (1,0 %, 1,5 % y 2,2 %).</p>
+            <p>El tráfico mensual varía entre unos 55.000–64.000 pasajeros en enero, el mes más bajo, y 110.000–127.000 en agosto, el más alto: el mes punta duplica al valle. Eso se traduce en entre 1.773 y 4.093 pasajeros al día y entre 195 y 450 en la hora punta.</p>
+            <p><b>Valor de diseño.</b> El de agosto: <b>389, 444 y 450 pasajeros por hora</b>. La diferencia es mayor entre pesimista y base (14 %) que entre base y optimista (1 %), por la fórmula del escenario optimista.</p>`)}
+        </div>
+        <div class="zp-controls">
+          ${seg('hpm', [{ value: 'mmt', label: 'MMT · pax/mes' }, { value: 'dmt', label: 'DMT · pax/día' }, { value: 'hdp', label: 'HDP · pax/hora punta' }], 'hdp')}
+        </div>
+        <div class="zp-grid-side wide">
+          <div class="zp-table-wrap tall"><table class="zp-table zp-hp-table" id="zp-hp-t"></table></div>
+          <div class="zp-chart" id="zp-hp-c"></div>
+        </div>
+        <p class="zp-lab-cap" style="margin-top:1.4rem">Operaciones y pistas necesarias en 2050 (hoja Operaciones)</p>
+        <div class="zp-design" id="zp-design"></div>
+      </div>
+
+      <div class="zp-panel zp-reveal" id="zp-obs-panel">
+        <div class="zp-panel-head"><h3>Observaciones sobre los datos y los cálculos</h3></div>
+        <p class="zp-step-lead">Puntos detectados al revisar el Excel que conviene comprobar antes de usar los resultados. Las cifras marcadas como cálculo propio se han obtenido repitiendo sus fórmulas. Pulsa una tarjeta para ver el detalle.</p>
+        <div class="zp-obs-filter">${seg('obs', [{ value: 'all', label: 'Todas' }, { value: 'alto', label: 'Impacto alto' }, { value: 'medio', label: 'Impacto medio' }, { value: 'bajo', label: 'Impacto bajo' }], 'all')}</div>
+        <div class="zp-obs" id="zp-obs"></div>
+      </div>
+
       <div class="zp-panel zp-reveal zp-final">
         <div class="zp-final-grid">
           <div><b>923.583 – 1.069.258</b><span>pasajeros en 2050</span></div>
@@ -743,6 +791,81 @@
       const x = Math.round(ev.points[0].x);
       if (x >= 2026) { $('zp-sy').value = x; drawScen(); }
     });
+
+    // Relación con el PIB (resultados)
+    let pibv = 'mm';
+    function drawPib() {
+      const excl = $('zp-pib-x').checked;
+      const src = pibv === 'mm' ? D.pib.map(r => ({ x: r[2], y: r[3], q: `${r[0]} ${r[1]}`, yr: r[0] })) : D.tam.map(r => ({ x: r[2], y: r[3], q: `${r[0]} ${r[1]}`, yr: r[0] }));
+      const pts = src.filter(p => !(excl && p.q === '2025 T4'));
+      const r = regression(pts), xs = pts.map(p => p.x), x0 = Math.min(...xs), x1 = Math.max(...xs);
+      tween($('zp-pib-e'), r.b, 2); tween($('zp-pib-r2'), r.r2, 2);
+      $('zp-pib-txt').textContent = pibv === 'mm'
+        ? `${r.n} trimestres. Por cada 1 % de PIB, el tráfico varía un ${fmt(r.b, 2)} %. La nube es dispersa: el PIB explica solo una parte (R² = ${fmt(r.r2, 2)}).`
+        : `Contraste con un año completo móvil (${r.n} puntos). La pendiente es cálculo propio: el Excel solo dibuja esta gráfica.`;
+      plot($('zp-pib'), [
+        { x: pts.map(p => p.x), y: pts.map(p => p.y), text: pts.map(p => p.q), mode: 'markers', marker: { size: 8, color: pts.map(p => p.q === '2025 T4' ? C.coral : p.yr), colorscale: [[0, '#3b4a60'], [1, C.cyan]], line: { color: C.bg, width: 1 } }, hovertemplate: '<b>%{text}</b><br>ln PIB %{x:.3f}<br>%{y:.3f}<extra></extra>' },
+        { x: [x0, x1], y: [r.a + r.b * x0, r.a + r.b * x1], mode: 'lines', line: { color: C.gold, width: 2.5 }, hoverinfo: 'skip' }
+      ], { showlegend: false, xaxis: { title: 'ln PIB' }, yaxis: { title: pibv === 'mm' ? 'ln media móvil trimestral' : 'TAM = ln(Σ 4 trimestres)', separatethousands: false } });
+    }
+    bindSeg(root, 'pibv', v => { pibv = v; drawPib(); });
+    $('zp-pib-x').addEventListener('change', drawPib);
+    drawPib();
+
+    // Hora punta 2050: MMT / DMT / HDP por mes y escenario
+    let hpm = 'hdp', hpSel = 7;
+    const calc = (pax, m) => { const mmt = pax * IDX_TOT[m] / 12, dmt = mmt / 31; return { mmt, dmt, hdp: dmt * 0.11 }; };
+    function drawHp() {
+      const max = Math.max(...IDX_TOT.map((_, m) => calc(SCEN[2].pax, m)[hpm]));
+      $('zp-hp-t').innerHTML = `<thead><tr><th>Mes</th><th>Índice</th>${SCEN.map(s => `<th>${s.label}<br><small>${s.g}</small></th>`).join('')}</tr></thead><tbody>` +
+        MESES_L.map((ml, m) => `<tr data-m="${m}" class="${m === hpSel ? 'mid' : ''}"><td>${m === 7 ? '★ ' : ''}${ml}</td><td>${fmt(IDX_TOT[m], 2)}</td>${SCEN.map(s => { const v = calc(s.pax, m)[hpm]; return `<td><div class="zp-cellbar" style="--w:${v / max * 100}%"></div><span>${fmt(v)}</span></td>`; }).join('')}</tr>`).join('') + '</tbody>';
+      $('zp-hp-t').querySelectorAll('tbody tr').forEach(tr => tr.addEventListener('click', () => { hpSel = +tr.dataset.m; drawHp(); }));
+      const cols3 = [C.cyan, C.gold, C.coral];
+      plot($('zp-hp-c'), SCEN.map((s, k) => ({
+        x: MESES, y: IDX_TOT.map((_, m) => calc(s.pax, m)[hpm]), type: 'bar', name: s.label,
+        marker: { color: cols3[k], opacity: IDX_TOT.map((_, m) => m === hpSel ? 1 : 0.45) },
+        hovertemplate: '%{x}: <b>%{y:,.0f}</b><extra>' + s.label + '</extra>'
+      })), { barmode: 'group', bargap: 0.25, yaxis: { title: { mmt: 'Pasajeros / mes', dmt: 'Pasajeros / día', hdp: 'Pasajeros en hora punta' }[hpm] }, margin: { t: 30 } });
+      const sel = SCEN.map(s => calc(s.pax, hpSel).hdp);
+      $('zp-design').innerHTML = `<table class="zp-table"><thead><tr><th>${MESES_L[hpSel]} 2050</th>${SCEN.map(s => `<th>${s.label}</th>`).join('')}</tr></thead><tbody>
+        <tr><td>Pasajeros en la hora punta</td>${sel.map(v => `<td>${fmt(v)}</td>`).join('')}</tr>
+        <tr><td>Operaciones por hora (÷ 85)</td>${sel.map(v => `<td>${fmt(v / 85, 1)}</td>`).join('')}</tr>
+        <tr><td>Pistas necesarias (÷ 40)</td>${sel.map(v => `<td>${fmt(v / 85 / 40, 2)}</td>`).join('')}</tr>
+        <tr class="mid"><td>Conclusión</td>${sel.map(v => `<td>${v / 85 / 40 < 1 ? '1 pista' : '2 pistas'}</td>`).join('')}</tr></tbody></table>
+        ${hpSel !== 7 ? '<p class="zp-note">El valor de diseño es el de agosto (★), el mes más cargado. Pulsa su fila para verlo.</p>' : ''}`;
+    }
+    bindSeg(root, 'hpm', v => { hpm = v; drawHp(); });
+    drawHp();
+
+    // Observaciones (apartado 7)
+    const OBS = [
+      { t: 'Trimestre parcial en la elasticidad', imp: 'alto', k: 'ε 1,07 → 1,50', d: 'El primer punto de la regresión (2025 T4) solo contiene octubre: 59.066 pasajeros frente a unos 177.000 de un trimestre completo. Es el punto aislado de la gráfica y reduce la elasticidad. Sin él, ε = 1,50 y los escenarios darían 1,03, 1,24 y 1,60 millones de pasajeros en 2050. Además R² es solo 0,11 (0,22 sin el punto): la elasticidad es una estimación aproximada. (Cálculo propio.)' },
+      { t: 'Escenario optimista', imp: 'alto', k: '1,07 M → 1,27 M', d: 'La etiqueta indica un crecimiento del PIB del 2,2 %, pero la fórmula multiplica la elasticidad por la tasa histórica del 1,55 %. Por eso su resultado (1.069.258) es casi igual al base. Con el 2,2 % resultarían unos 1.267.000 pasajeros. (Cálculo propio.)' },
+      { t: 'Parámetros de la hora punta', imp: 'medio', k: '85 vs 67,4 pax/op', d: 'El factor del 11 % no tiene fuente y el reparto diario divide todos los meses entre 31 días. La hoja Operaciones calcula un promedio de 67,4 pasajeros por operación pero después usa 85. Con el promedio observado saldrían 5,8–6,7 operaciones por hora, muy por debajo de la capacidad de una pista: la conclusión no cambia. (Cálculo propio.)' },
+      { t: 'Datos de 2019', imp: 'medio', k: '344.978 vs 467.774', d: 'La suma de 2019 en el Excel (344.978) se aproxima a los pasajeros internacionales publicados (345.301) y no al total (467.774). En los demás años contrastados el Excel coincide con las cifras publicadas. Es posible que 2019 se tomara de una categoría parcial, lo que afectaría a la media móvil de 2018–2019 y el mínimo de 2019 podría estar infravalorado.' },
+      { t: 'Unión de 2019 y 2022', imp: 'bajo', k: '< 0,01 en índices', d: 'Al eliminar 2020 y 2021, la media móvil de agosto–diciembre de 2019 y enero–mayo de 2022 (diez meses) mezcla meses de ambos años. Su efecto sobre los índices medios es inferior a 0,01 en cualquier mes. (Cálculo propio.)' },
+      { t: 'Índice del PIB', imp: 'medio', k: 'Sin fuente', d: 'El Excel no indica su fuente, ámbito ni año base. El primer trimestre de cada año es siempre inferior al cuarto del anterior, lo que sugiere que no está desestacionalizado. El valor inicial de la tasa de crecimiento se etiqueta como «PIB 2004 T1» pero corresponde al tercer trimestre de 2004.' },
+      { t: 'Columna de variación interanual', imp: 'bajo', k: 'Signo erróneo', d: 'En la primera hoja usa el valor absoluto en parte de los meses y muestra como aumento algunas caídas (agosto de 2019 aparece como +41,3 % cuando fue una caída). No debe emplearse sin corregir.' }
+    ];
+    $('zp-obs').innerHTML = OBS.map((o, i) => `
+      <article class="zp-ob" data-imp="${o.imp}">
+        <button type="button" class="zp-ob-head" aria-expanded="false">
+          <span class="zp-ob-n">${String(i + 1).padStart(2, '0')}</span>
+          <span class="zp-ob-t">${o.t}<small>${o.k}</small></span>
+          <span class="zp-ob-imp ${o.imp}">Impacto ${o.imp}</span>
+          <span class="zp-ob-plus">+</span>
+        </button>
+        <div class="zp-ob-body"><p>${o.d}</p></div>
+      </article>`).join('');
+    $('zp-obs').querySelectorAll('.zp-ob').forEach(ob => {
+      const btn = ob.querySelector('.zp-ob-head'), body = ob.querySelector('.zp-ob-body');
+      btn.addEventListener('click', () => {
+        const open = !ob.classList.contains('open');
+        ob.classList.toggle('open', open); btn.setAttribute('aria-expanded', open);
+        body.style.maxHeight = open ? body.scrollHeight + 'px' : '0px';
+      });
+    });
+    bindSeg(root, 'obs', v => $('zp-obs').querySelectorAll('.zp-ob').forEach(ob => ob.classList.toggle('hidden', v !== 'all' && ob.dataset.imp !== v)));
   }
 
   // ===================== Página completa =====================
