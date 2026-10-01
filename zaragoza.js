@@ -11,8 +11,8 @@
   const MESES = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
   const MESES_L = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
   const C = {
-    gold: '#f5c518', cyan: '#5ec8e5', coral: '#ff7a59', text: '#e8ecf3',
-    muted: '#93a0b5', faint: '#556178', grid: 'rgba(232,236,243,0.07)', bg: '#0a1020'
+    gold: '#b0945a', cyan: '#7a98ba', coral: '#b06c58', text: '#e5e7eb',
+    muted: '#9ca3af', faint: '#4b5563', grid: 'rgba(229,231,235,0.07)', bg: '#111827'
   };
   const PAX_2025 = 707493;
   const EPS = 1.0718369235500866;
@@ -34,9 +34,9 @@
   function layout(extra) {
     return merge({
       paper_bgcolor: 'rgba(0,0,0,0)', plot_bgcolor: 'rgba(0,0,0,0)',
-      font: { family: 'Inter, sans-serif', color: C.muted, size: 12 },
+      font: { family: 'Source Sans 3, sans-serif', color: C.muted, size: 12 },
       margin: { l: 60, r: 20, t: 20, b: 45 },
-      hoverlabel: { bgcolor: '#111a2e', bordercolor: C.gold, font: { color: C.text, family: 'Inter, sans-serif' } },
+      hoverlabel: { bgcolor: '#1f2937', bordercolor: C.gold, font: { color: C.text, family: 'Source Sans 3, sans-serif' } },
       legend: { orientation: 'h', y: 1.12, x: 0, font: { color: C.text } },
       xaxis: { gridcolor: C.grid, zeroline: false, linecolor: C.grid },
       yaxis: { gridcolor: C.grid, zeroline: false, linecolor: C.grid, separatethousands: true },
@@ -263,12 +263,12 @@
       // mini gráfico con la ventana resaltada
       const x = S.map(r => iso(r[0], r[1]));
       plot(root.querySelector('#zp-c1'), [
-        { x, y: S.map(r => r[4]), mode: 'lines', name: 'Pasajeros', line: { color: 'rgba(94,200,229,0.55)', width: 1.2 }, hovertemplate: '%{x|%b %Y}: %{y:,.0f}<extra></extra>' },
+        { x, y: S.map(r => r[4]), mode: 'lines', name: 'Pasajeros', line: { color: 'rgba(122,152,186,0.55)', width: 1.2 }, hovertemplate: '%{x|%b %Y}: %{y:,.0f}<extra></extra>' },
         { x, y: S.map(r => r[5]), mode: 'lines', name: 'Media móvil', line: { color: C.gold, width: 2.2 }, connectgaps: false, hovertemplate: '%{x|%b %Y}: %{y:,.0f}<extra>MM</extra>' },
         { x: [iso(S[i][0], S[i][1])], y: [mm], mode: 'markers', name: 'Mes elegido', marker: { size: 12, color: C.coral, line: { color: '#fff', width: 2 } }, hoverinfo: 'skip' }
       ], {
         margin: { t: 10, b: 30, l: 50 }, showlegend: false,
-        shapes: [{ type: 'rect', x0: iso(a[0], a[1]), x1: iso(b[0], b[1]), yref: 'paper', y0: 0, y1: 1, fillcolor: 'rgba(245,197,24,0.12)', line: { color: C.gold, width: 1 } }],
+        shapes: [{ type: 'rect', x0: iso(a[0], a[1]), x1: iso(b[0], b[1]), yref: 'paper', y0: 0, y1: 1, fillcolor: 'rgba(176,148,90,0.12)', line: { color: C.gold, width: 1 } }],
         xaxis: { range: ['2004-01-01', '2026-05-01'] }
       });
     });
@@ -339,7 +339,7 @@
       }).join('');
       plot(root.querySelector('#zp-c3'), [
         { x: pts.map(p => p.x), y: pts.map(p => p.y), text: pts.map(p => p.lbl), mode: 'markers', name: 'Trimestres',
-          marker: { size: 8, color: pts.map(p => p.partial ? C.coral : p.yr), colorscale: [[0, '#2d4a6b'], [1, C.cyan]], line: { color: C.bg, width: 1 } },
+          marker: { size: 8, color: pts.map(p => p.partial ? C.coral : p.yr), colorscale: [[0, '#3b4a60'], [1, C.cyan]], line: { color: C.bg, width: 1 } },
           hovertemplate: '<b>%{text}</b><br>ln PIB %{x:.3f}<br>ln T %{y:.3f}<extra></extra>' },
         { x: [x0, x1], y: [r.a + r.b * x0, r.a + r.b * x1], mode: 'lines', name: `ε = ${fmt(r.b, 2)}`, line: { color: C.gold, width: 2.5 }, hoverinfo: 'skip' },
         { x: [s.x], y: [s.y], mode: 'markers', marker: { size: 18, color: 'rgba(0,0,0,0)', line: { color: C.coral, width: 3 } }, hoverinfo: 'skip', showlegend: false }
@@ -377,7 +377,7 @@
       const hd = IDX_TOT.map(v => sc.pax * v / 12 / 31 * 0.11);
       plot(root.querySelector('#zp-c4'), [{
         x: MESES, y: hd, type: 'bar', text: hd.map(v => fmt(v)), textposition: 'outside', textfont: { color: C.text, size: 11 },
-        marker: { color: hd.map((_, i) => i === m ? C.gold : i === 7 ? 'rgba(255,122,89,0.7)' : 'rgba(94,200,229,0.35)') },
+        marker: { color: hd.map((_, i) => i === m ? C.gold : i === 7 ? 'rgba(176,108,88,0.7)' : 'rgba(122,152,186,0.35)') },
         hovertemplate: '%{x}: <b>%{y:,.0f}</b> pax en la hora punta<extra></extra>'
       }], { yaxis: { title: 'HDP (pax/h)', range: [0, 520] }, margin: { t: 10 } });
       root.querySelector('#zp-r4-design').style.display = m === 7 ? '' : 'none';
@@ -612,13 +612,27 @@
         <p class="zp-step-lead" id="zp-hist-txt"></p>
         <div class="zp-chart" id="zp-hist"></div>
       </div>
-      <div class="zp-panel zp-reveal">
-        <div class="zp-panel-head"><h3>Escenarios de demanda en 2050</h3></div>
-        <div class="zp-scen">
-          ${SCEN.map(s => `<div class="zp-scen-card"><span>${s.label} · PIB ${s.g}</span><b data-to="${s.pax}">0</b><em>+${fmt((s.pax / PAX_2025 - 1) * 100, 1)} % sobre 2025</em><div class="zp-scen-bar"><i style="--w:${s.pax / 1100000 * 100}%"></i></div></div>`).join('')}
+      <div class="zp-panel zp-reveal" id="zp-scen-panel">
+        <div class="zp-panel-head">
+          <h3>Escenarios de demanda en 2050</h3>
+          ${info(`<p><b>Por qué escenarios.</b> Nadie sabe cómo crecerá la economía en los próximos 25 años. En lugar de apostar por un único valor, el Excel define tres escenarios de crecimiento del PIB (pesimista 1,0 %, base 1,5 % y optimista 2,2 %) y calcula el tráfico que resultaría en cada uno. El resultado no es una predicción, sino un <b>rango de demanda plausible</b> dentro del cual debe funcionar el aeropuerto.</p>
+            <p><b>Referencia histórica.</b> El PIB ha crecido a una tasa anual compuesta del 1,55 % (de 91,99 a 128,15 en 21,5 años), muy próxima al escenario base.</p>
+            <p><b>De la economía al tráfico.</b> El crecimiento anual del tráfico es i = ε · g, y se aplica de forma compuesta durante 25 años sobre los 707.493 pasajeros de 2025.</p>
+            <p><b>Revisión.</b> La fórmula del escenario optimista multiplica la elasticidad por la tasa histórica (1,55 %) y no por el 2,2 % de su etiqueta; por eso su resultado casi coincide con el base. Activa «Corregir escenario optimista» para ver el valor con 2,2 %.</p>`)}
         </div>
+        <p class="zp-step-lead">Elige la elasticidad, ajusta tu propio crecimiento del PIB y desplaza el año para ver cómo evoluciona la demanda en cada escenario.</p>
+        <div class="zp-scen-ctrl">
+          <div>
+            <p class="zp-lab-cap">Elasticidad ε</p>
+            ${seg('eps', [{ value: 'excel', label: 'Excel · 1,07' }, { value: 'alt', label: 'Sin trimestre parcial · 1,50' }], 'excel')}
+            <label class="zp-check"><input type="checkbox" id="zp-fixopt"> Corregir escenario optimista (usar 2,2 %)</label>
+          </div>
+          <div class="zp-slider"><div><label for="zp-sg">Tu escenario: crecimiento del PIB</label><output id="zp-sg-o"></output></div><input type="range" id="zp-sg" min="0" max="3.5" step="0.1" value="1.8"></div>
+          <div class="zp-slider"><div><label for="zp-sy">Año consultado</label><output id="zp-sy-o"></output></div><input type="range" id="zp-sy" min="2026" max="2050" step="1" value="2050"></div>
+        </div>
+        <div class="zp-scen" id="zp-scen-cards"></div>
         <div class="zp-chart" id="zp-proj"></div>
-        <p class="zp-note">El escenario optimista del Excel multiplica la elasticidad por la tasa histórica (1,55 %) en lugar del 2,2 % de su etiqueta; con 2,2 % saldrían ≈ 1.267.000 pasajeros.</p>
+        <p class="zp-note" id="zp-scen-note"></p>
       </div>
       <div class="zp-panel zp-reveal zp-final">
         <div class="zp-final-grid">
@@ -652,7 +666,7 @@
       if (mode === 'total') {
         const mmK = {}; S.forEach(r => { if (r[5]) mmK[iso(r[0], r[1])] = r[5]; });
         traces = [
-          { x, y: rows.map(r => r[2] + r[3]), type: 'bar', name: 'Pasajeros totales', marker: { color: rows.map(r => r[0] === 2020 || r[0] === 2021 ? 'rgba(255,122,89,0.6)' : 'rgba(94,200,229,0.55)') }, hovertemplate: '%{x|%b %Y}: <b>%{y:,.0f}</b><extra></extra>' },
+          { x, y: rows.map(r => r[2] + r[3]), type: 'bar', name: 'Pasajeros totales', marker: { color: rows.map(r => r[0] === 2020 || r[0] === 2021 ? 'rgba(176,108,88,0.6)' : 'rgba(122,152,186,0.55)') }, hovertemplate: '%{x|%b %Y}: <b>%{y:,.0f}</b><extra></extra>' },
           { x: Object.keys(mmK), y: Object.values(mmK), mode: 'lines', name: 'Tendencia', line: { color: C.gold, width: 3 }, hovertemplate: '%{x|%b %Y}: %{y:,.0f}<extra>Tendencia</extra>' }
         ];
         ya = { title: 'Pasajeros / mes' };
@@ -677,26 +691,58 @@
     root.querySelector('#zp-covid').addEventListener('change', e => { covid = e.target.checked; drawHist(); });
     drawHist();
 
-    // Proyección
+    // Escenarios interactivos
     const annual = annualTotals(), yrs = Array.from({ length: 26 }, (_, k) => 2025 + k);
-    const cols = [C.cyan, C.gold, C.coral];
-    plot(root.querySelector('#zp-proj'), [
-      { x: annual.map(a => a[0]), y: annual.map(a => a[1]), name: 'Histórico Aena', mode: 'lines+markers', line: { color: C.muted, width: 2 }, marker: { size: 5 }, hovertemplate: '%{x}: <b>%{y:,.0f}</b><extra>Histórico</extra>' },
-      ...SCEN.map((s, k) => {
-        const i = Math.pow(s.pax / PAX_2025, 1 / 25) - 1;
-        return { x: yrs, y: yrs.map(y => PAX_2025 * Math.pow(1 + i, y - 2025)), name: s.label, mode: 'lines', line: { color: cols[k], width: 2.5 }, hovertemplate: '%{x}: <b>%{y:,.0f}</b><extra>' + s.label + '</extra>' };
-      })
-    ], {
-      hovermode: 'x unified', yaxis: { title: 'Pasajeros / año', rangemode: 'tozero' },
-      shapes: [{ type: 'line', xref: 'paper', x0: 0, x1: 1, y0: 1e6, y1: 1e6, line: { color: C.faint, width: 1, dash: 'dash' } }],
-      annotations: [{ xref: 'paper', x: 0.01, y: 1e6, text: 'Capacidad de la terminal (2008): 1 M pax/año', showarrow: false, yanchor: 'bottom', xanchor: 'left', font: { size: 10, color: C.muted } }]
+    const $ = id => root.querySelector('#' + id);
+    const cols = [C.cyan, C.gold, C.coral, C.text];
+    let eps = 'excel';
+    function scenarios() {
+      const e = eps === 'excel' ? EPS : 1.50, fix = $('zp-fixopt').checked, gu = +$('zp-sg').value;
+      return [
+        { label: 'Pesimista', g: 1.0 },
+        { label: 'Base', g: 1.5 },
+        { label: 'Optimista', g: 2.2, gEff: eps === 'excel' && !fix ? 1.55 : 2.2 },
+        { label: 'Tu escenario', g: gu, user: true }
+      ].map(s => ({ ...s, i: e * (s.gEff || s.g) / 100 }));
+    }
+    function drawScen() {
+      const sc = scenarios(), Y = +$('zp-sy').value;
+      $('zp-sg-o').textContent = fmt(+$('zp-sg').value, 1) + ' %';
+      $('zp-sy-o').textContent = Y;
+      const cards = $('zp-scen-cards');
+      if (!cards.children.length) cards.innerHTML = sc.map((s, k) => `<div class="zp-scen-card${s.user ? ' user' : ''}" style="--c:${cols[k]}"><span class="t"></span><b data-v="0">0</b><em></em><div class="zp-scen-bar"><i></i></div></div>`).join('');
+      sc.forEach((s, k) => {
+        const v = PAX_2025 * Math.pow(1 + s.i, Y - 2025), c = cards.children[k];
+        c.querySelector('.t').textContent = `${s.label} · PIB ${fmt(s.g, 1)} % · i = ${fmt(s.i * 100, 2)} %`;
+        tween(c.querySelector('b'), v);
+        c.querySelector('em').textContent = `${v >= PAX_2025 ? '+' : ''}${fmt((v / PAX_2025 - 1) * 100, 1)} % sobre 2025 · pasajeros en ${Y}`;
+        c.querySelector('i').style.width = Math.min(100, v / 1.7e6 * 100) + '%';
+      });
+      $('zp-scen-note').textContent = eps === 'excel' && !$('zp-fixopt').checked
+        ? 'Valores del Excel: el optimista usa en su fórmula la tasa histórica del 1,55 % (ver «!»).'
+        : 'Valores recalculados (cálculo propio, no figuran en el Excel).';
+      plot($('zp-proj'), [
+        { x: annual.map(a => a[0]), y: annual.map(a => a[1]), name: 'Histórico Aena', mode: 'lines+markers', line: { color: C.muted, width: 2 }, marker: { size: 4 }, hovertemplate: '%{x}: <b>%{y:,.0f}</b><extra>Histórico</extra>' },
+        ...sc.map((s, k) => ({ x: yrs, y: yrs.map(y => PAX_2025 * Math.pow(1 + s.i, y - 2025)), name: s.label, mode: 'lines', line: { color: cols[k], width: s.user ? 3 : 2, dash: s.user ? 'dash' : 'solid' }, hovertemplate: '%{x}: <b>%{y:,.0f}</b><extra>' + s.label + '</extra>' })),
+        { x: sc.map(() => Y), y: sc.map(s => PAX_2025 * Math.pow(1 + s.i, Y - 2025)), mode: 'markers', marker: { size: 9, color: cols, line: { color: C.bg, width: 2 } }, hoverinfo: 'skip', showlegend: false }
+      ], {
+        hovermode: 'x unified', yaxis: { title: 'Pasajeros / año', rangemode: 'tozero' }, xaxis: { range: [2003.5, 2050.8] },
+        shapes: [
+          { type: 'line', xref: 'paper', x0: 0, x1: 1, y0: 1e6, y1: 1e6, line: { color: C.faint, width: 1, dash: 'dot' } },
+          { type: 'line', x0: Y, x1: Y, yref: 'paper', y0: 0, y1: 1, line: { color: C.faint, width: 1 } }
+        ],
+        annotations: [{ xref: 'paper', x: 0.01, y: 1e6, text: 'Capacidad de la terminal (2008): 1 M pax/año', showarrow: false, yanchor: 'bottom', xanchor: 'left', font: { size: 10, color: C.muted } }]
+      });
+    }
+    bindSeg(root, 'eps', v => { eps = v; drawScen(); });
+    ['zp-sg', 'zp-sy'].forEach(id => $(id).addEventListener('input', drawScen));
+    $('zp-fixopt').addEventListener('change', drawScen);
+    const projEl = $('zp-proj');
+    drawScen();
+    if (projEl.on) projEl.on('plotly_click', ev => {
+      const x = Math.round(ev.points[0].x);
+      if (x >= 2026) { $('zp-sy').value = x; drawScen(); }
     });
-    const io = new IntersectionObserver(es => es.forEach(e => {
-      if (!e.isIntersecting) return;
-      e.target.querySelectorAll('[data-to]').forEach(b => tween(b, +b.dataset.to));
-      io.unobserve(e.target);
-    }), { threshold: 0.3 });
-    io.observe(root.querySelector('.zp-scen'));
   }
 
   // ===================== Página completa =====================
