@@ -112,6 +112,13 @@
     const tabsEl = document.getElementById('section-tabs');
     const contentEl = document.getElementById('section-content');
 
+    // Proyectos con página propia (p. ej. Zaragoza): sin hero ni pestañas
+    const custom = project.customPage && window.ZGZ_PAGE;
+    heroEl.style.display = custom ? 'none' : '';
+    tabsEl.style.display = custom ? 'none' : '';
+    document.body.classList.toggle('zgz-mode', !!custom);
+    if (custom) { window.ZGZ_PAGE(contentEl, project); return; }
+
     // Hero
     const tagsHTML = project.tags.map(t => `<span class="tag">${t}</span>`).join('');
     heroEl.innerHTML = `
@@ -146,24 +153,8 @@
       ? `<div class="software-list">${section.software.map(s => `<span class="software-badge">${s}</span>`).join('')}</div>`
       : '';
 
-    // Secciones con renderizado propio (p. ej. proyecto de Zaragoza)
-    if (section.custom && window.ZGZ_SECTIONS && window.ZGZ_SECTIONS[section.custom]) {
-      container.innerHTML = `
-        <div class="section-content">
-          <div class="section-content-header">
-            <h2 class="section-content-title">${section.title}</h2>
-            <p class="section-content-summary">${section.summary}</p>
-            ${softwareHTML}
-          </div>
-          <div class="zgz" id="zgz-host"></div>
-        </div>
-      `;
-      window.ZGZ_SECTIONS[section.custom](container.querySelector('#zgz-host'));
-      return;
-    }
-
     let stepsHTML = '';
-    (section.steps || []).forEach((step, i) => {
+    section.steps.forEach((step, i) => {
       // Check if this is the parametric study step with substeps
       if (step.isParametricStudy) {
         stepsHTML += renderParametricStep(step, i);
@@ -534,6 +525,7 @@
       renderProject(projectId);
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } else {
+      document.body.classList.remove('zgz-mode');
       landingView.style.display = 'block';
       projectView.style.display = 'none';
       projectView.classList.remove('active');
