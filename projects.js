@@ -243,7 +243,7 @@ const PROJECTS = [
     subtitle: "Previsión de pasajeros a 2050 y dimensionamiento de pista a partir de datos de Aena (2004-2026)",
     description: "Análisis de 268 meses de tráfico: tendencia, estacionalidad, elasticidad frente al PIB, escenarios a 2050 y cálculo de la hora punta de diseño. Con simulador interactivo.",
     tags: ["Planificación aeroportuaria", "Excel", "Series temporales", "Econometría"],
-    image: "img/zaragoza_hero.svg",
+    image: "img/zaragoza_terminal.webp",
     status: "Completado",
     date: "2026",
     customPage: true,
