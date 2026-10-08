@@ -576,6 +576,93 @@ img { max-width: 100%; height: auto; display: block; }
   flex-shrink: 0;
 }
 
+/* --- Estado del apartado («En curso») y resumen PDF --- */
+.section-content-title-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-md);
+  margin-bottom: var(--space-sm);
+}
+
+.section-content-title-row .section-content-title { margin-bottom: 0; }
+
+.section-content-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--space-md);
+}
+
+.status-badge,
+.section-tab-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(214, 168, 79, 0.1);
+  border: 1px solid rgba(214, 168, 79, 0.35);
+  border-radius: 4px;
+  font-family: var(--font-body);
+  font-weight: 600;
+  color: #d6a84f;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.status-badge { padding: 3px 10px; font-size: 0.7rem; }
+
+.status-badge-dot {
+  width: 6px;
+  height: 6px;
+  background: #d6a84f;
+  border-radius: 50%;
+  animation: pulse 2s infinite;
+}
+
+.section-tab-status {
+  margin-left: 2px;
+  padding: 1px 6px;
+  font-size: 0.6rem;
+}
+
+.wip-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: var(--space-sm);
+  padding: var(--space-3xl) var(--space-xl);
+  background: var(--bg-card);
+  border: 1px dashed rgba(214, 168, 79, 0.35);
+  border-radius: var(--radius-lg);
+  backdrop-filter: blur(10px);
+}
+
+.wip-panel-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  margin-bottom: var(--space-sm);
+  background: rgba(214, 168, 79, 0.1);
+  border-radius: 50%;
+  color: #d6a84f;
+}
+
+.wip-panel-title {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+
+.wip-panel-text {
+  max-width: 520px;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
 /* --- Timeline --- */
 .timeline {
   position: relative;

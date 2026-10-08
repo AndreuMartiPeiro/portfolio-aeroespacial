@@ -691,7 +691,8 @@
         </div>
         <div class="zp-callout"><strong>Después del Excel.</strong> En septiembre de 2025 Ryanair anunció un recorte del 45 % de su capacidad en Zaragoza. En agosto de 2026 hubo 63.717 pasajeros (−13,8 % interanual). Los escenarios parten de 2025, así que esta caída es relevante: el tráfico de un aeropuerto regional depende más de las rutas de las aerolíneas que de la economía.</div>
         <div class="zp-downloads">
-          <a class="zp-btn" href="data/Informe_demanda_aeropuerto_Zaragoza.pdf" target="_blank" rel="noopener">Informe completo (PDF)</a>
+          <a class="zp-btn" href="data/resumenes/Resumen_Demanda_Aeropuerto_Zaragoza.pdf" target="_blank" rel="noopener">Resumen (PDF)</a>
+          <a class="zp-btn ghost" href="data/Informe_demanda_aeropuerto_Zaragoza.pdf" target="_blank" rel="noopener">Informe completo (PDF)</a>
           <a class="zp-btn ghost" href="data/evolucion_trafico_zaragoza.xlsx" download>Excel de trabajo (.xlsx)</a>
         </div>
         <p class="zp-note">Autores: Marc Marzal Català, Héctor Hernández de la Rosa y Andreu Martí Peiró. Fuentes: Aena, Aragón Digital, El Español, Wikipedia.</p>
