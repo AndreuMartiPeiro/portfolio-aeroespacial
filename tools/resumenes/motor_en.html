@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Summary — Thermodynamic analysis of the F107-WR-402 engine</title>
+  <meta name="author" content="Andreu Martí Peiró" />
+  <link rel="stylesheet" href="resumen.css" />
+</head>
+<body>
+
+<!-- ===================== Page 1 ===================== -->
+<div class="page">
+  <header class="band">
+    <div class="band-top">
+      <span class="brand">Aerospace portfolio</span>
+      <span>Technical summary · Section 2 of 4</span>
+    </div>
+    <div class="band-body">
+      <p class="kicker">Project · Missile design and analysis</p>
+      <h1>Thermodynamic analysis of the engine</h1>
+      <p class="subtitle">Williams F107-WR-402 turbofan modelled in GasTurb&nbsp;15: cruise design point and parametric study.</p>
+      <div class="band-meta">
+        <div><span>Author</span>Andreu Martí Peiró</div>
+        <div><span>Tools</span>GasTurb 15 · MATLAB · Excel</div>
+        <div><span>Date</span>October 2026</div>
+      </div>
+    </div>
+  </header>
+
+  <div class="kpis">
+    <div class="kpi"><div class="kpi-label">Net thrust</div><div class="kpi-value">2.90<small>kN</small></div><div class="kpi-note">Cruise, Mach 0.72</div></div>
+    <div class="kpi"><div class="kpi-label">Specific fuel consumption</div><div class="kpi-value">22.83</div><div class="kpi-note">g/(kN·s)</div></div>
+    <div class="kpi"><div class="kpi-label">Overall pressure ratio</div><div class="kpi-value">14.2</div><div class="kpi-note">Fan 2.30 · HPC 6.06</div></div>
+    <div class="kpi"><div class="kpi-label">Turbine entry temperature</div><div class="kpi-value">1227<small>K</small></div><div class="kpi-note">Uncooled turbine</div></div>
+    <div class="kpi"><div class="kpi-label">Bypass ratio</div><div class="kpi-value">1.0</div><div class="kpi-note">Mixed flow</div></div>
+    <div class="kpi"><div class="kpi-label">Parametric cases</div><div class="kpi-value">1813</div><div class="kpi-note">converged in GasTurb</div></div>
+  </div>
+
+  <div class="content">
+    <section>
+      <div class="sec-head"><span class="sec-num">01</span><h2>Objective and scope</h2></div>
+      <div class="grid-60">
+        <div>
+          <p class="lead">This section reproduces the thermodynamic cycle of the <strong>Williams F107-WR-402</strong> turbofan, the engine selected to power the missile, and evaluates how thrust and fuel consumption respond to its two most influential design parameters.</p>
+          <p>Published engine data are complemented with justified estimates for the parameters that are not public. With this model the cruise design point is calculated and a map of 49 × 43 combinations of pressure ratio and temperature is evaluated.</p>
+        </div>
+        <aside class="card">
+          <h3>Engine data sheet</h3>
+          <dl class="spec">
+            <dt>Type</dt><dd>Two-spool, mixed-flow turbofan</dd>
+            <dt>LP spool</dt><dd>4-stage fan + booster; 2-stage turbine</dd>
+            <dt>HP spool</dt><dd>Centrifugal compressor; 1-stage turbine</dd>
+            <dt>Fuel</dt><dd>JP-10, 43.5 MJ/kg</dd>
+          </dl>
+        </aside>
+      </div>
+      <ul class="scope">
+        <li>Cruise design point <span class="tag ok">Completed</span></li>
+        <li>Parametric study <span class="tag ok">Completed</span></li>
+        <li>Off-design study <span class="tag wip">Upcoming</span></li>
+      </ul>
+    </section>
+
+    <section>
+      <div class="sec-head"><span class="sec-num">02</span><h2>Method and data provenance</h2></div>
+      <p>Every result in this summary comes from one of these four steps. Each table and figure states its origin in a <span class="src" style="display:inline"><b>Source</b></span> line.</p>
+      <div class="chain c3 mt-s" style="grid-template-columns: repeat(4, 1fr)">
+        <div class="step"><span class="n">Step 1</span><h3>Input data</h3><p>Published engine data (BPR, TET, stages, shaft speed) and own estimates for the rest. Table on page 2.</p></div>
+        <div class="step"><span class="n">Step 2</span><h3>Design point</h3><p>GasTurb 15 design calculation at Mach 0.72: overall performance, components and stations. Pages 3 and 4.</p></div>
+        <div class="step"><span class="n">Step 3</span><h3>Parametric study</h3><p>Sweep of TET and pressure ratio in GasTurb, exported to <code>DatosExportados.xlsx</code>. Pages 4 to 6.</p></div>
+        <div class="step"><span class="n">Step 4</span><h3>Processing</h3><p>The spreadsheet is read with an in-house script; figures and website are generated from the same file.</p></div>
+      </div>
+    </section>
+  </div>
+
+  <footer class="foot"><span><b>Andreu Martí Peiró</b> · Aerospace engineering portfolio</span><span>Engine analysis · 1 / 6</span></footer>
+</div>
+
+<!-- ===================== Page 2 ===================== -->
+<div class="page">
+  <div class="running"><span><b>Missile design and analysis</b> · Engine analysis</span><span>Williams F107-WR-402</span></div>
+  <div class="running-rule"></div>
+
+  <div class="content">
+    <section style="margin-top:0">
+      <div class="sec-head"><span class="sec-num">03</span><h2>Input data</h2></div>
+      <p>Parameters entered in GasTurb for the design calculation. <span class="tag oficial">Official</span> marks a published F107-WR-402 value; <span class="tag estimado">Estimated</span>, an own assumption with the justification given.</p>
+      <table class="compact mt-s">
+        <thead><tr><th style="width:62mm">Parameter</th><th class="num" style="width:24mm">Value</th><th style="width:20mm">Origin</th><th>Justification</th></tr></thead>
+        <tbody>
+          <tr class="group"><td colspan="4">Flight condition · cruise at Mach 0.72, low altitude</td></tr>
+          <tr><td>Inlet total temperature, T₁</td><td class="num strong">291.5 K</td><td><span class="tag estimado">Estimated</span></td><td class="just">Mach 0.72 at low altitude</td></tr>
+          <tr><td>Inlet total pressure, P₁</td><td class="num strong">116.5 kPa</td><td><span class="tag estimado">Estimated</span></td><td class="just">Mach 0.72 at low altitude</td></tr>
+          <tr><td>Ambient pressure</td><td class="num strong">101.0 kPa</td><td><span class="tag estimado">Estimated</span></td><td class="just">Low altitude</td></tr>
+          <tr><td>Inlet corrected mass flow, W2Rstd</td><td class="num strong">8.0 kg/s</td><td><span class="tag estimado">Estimated</span></td><td class="just">Set to obtain ≈ 2.9 kN of thrust with BPR = 1</td></tr>
+          <tr class="group"><td colspan="4">Cycle</td></tr>
+          <tr><td>Bypass ratio (BPR)</td><td class="num strong">1.0</td><td><span class="tag oficial">Official</span></td><td class="just">—</td></tr>
+          <tr><td>Burner exit temperature (TET)</td><td class="num strong">1227 K</td><td><span class="tag oficial">Official</span></td><td class="just">954 °C</td></tr>
+          <tr><td>Fan pressure ratio (inner and outer)</td><td class="num strong">2.30</td><td><span class="tag estimado">Estimated</span></td><td class="just">2-stage fan + 2-stage booster</td></tr>
+          <tr><td>HP compressor pressure ratio</td><td class="num strong">6.06</td><td><span class="tag estimado">Estimated</span></td><td class="just">Tuned for an overall pressure ratio ≈ 13.8 (official value)</td></tr>
+          <tr><td>Combustion efficiency</td><td class="num strong">0.99</td><td><span class="tag estimado">Estimated</span></td><td class="just">Standard value</td></tr>
+          <tr><td>Fuel heating value</td><td class="num strong">43.5 MJ/kg</td><td><span class="tag estimado">Estimated</span></td><td class="just">JP-10, high-density fuel</td></tr>
+          <tr class="group"><td colspan="4">Pressure losses (P<sub>out</sub> / P<sub>in</sub>)</td></tr>
+          <tr><td>Air intake</td><td class="num strong">0.97</td><td><span class="tag estimado">Estimated</span></td><td class="just">Annular intake in subsonic flight</td></tr>
+          <tr><td>Combustion chamber</td><td class="num strong">0.96</td><td><span class="tag estimado">Estimated</span></td><td class="just">Compact annular combustor, 4&nbsp;% loss</td></tr>
+          <tr><td>Ducts (compressor interduct, bypass, turbine interduct, exit)</td><td class="num strong">0.99</td><td><span class="tag estimado">Estimated</span></td><td class="just">Short ducts of a compact engine</td></tr>
+          <tr class="group"><td colspan="4">Turbomachinery</td></tr>
+          <tr><td>HPC isentropic efficiency</td><td class="num strong">0.82</td><td><span class="tag estimado">Estimated</span></td><td class="just">Small centrifugal compressor</td></tr>
+          <tr><td>HPT / LPT isentropic efficiency</td><td class="num strong">0.87 / 0.89</td><td><span class="tag estimado">Estimated</span></td><td class="just">Uncooled axial turbines with 1 and 2 stages</td></tr>
+          <tr><td>HP / LP turbine stages</td><td class="num strong">1 / 2</td><td><span class="tag oficial">Official</span></td><td class="just">—</td></tr>
+          <tr><td>Turbine cooling air</td><td class="num strong">0&nbsp;%</td><td><span class="tag oficial">Official</span></td><td class="just">Uncooled turbine</td></tr>
+          <tr><td>Nominal LP spool speed</td><td class="num strong">35,500 rpm</td><td><span class="tag oficial">Official</span></td><td class="just">—</td></tr>
+          <tr><td>Nominal HP spool speed</td><td class="num strong">60,000 rpm</td><td><span class="tag estimado">Estimated</span></td><td class="just">Typical for a small centrifugal compressor</td></tr>
+          <tr><td>HP and LP spool mechanical efficiency</td><td class="num strong">0.995</td><td><span class="tag estimado">Estimated</span></td><td class="just">Standard value for small engines</td></tr>
+          <tr class="group"><td colspan="4">Air system and nozzle</td></tr>
+          <tr><td>Overboard bleed / power offtake</td><td class="num strong">0 kg/s · 0.5 kW</td><td><span class="tag estimado">Estimated</span></td><td class="just">No bleed; gearbox alternator only</td></tr>
+          <tr><td>HP leakage to bypass / to LPT exit</td><td class="num strong">0.5&nbsp;% / 0.3&nbsp;%</td><td><span class="tag estimado">Estimated</span></td><td class="just">Minimal leakage</td></tr>
+          <tr><td>Nozzle thrust coefficient</td><td class="num strong">0.985</td><td><span class="tag estimado">Estimated</span></td><td class="just">Standard convergent nozzle</td></tr>
+        </tbody>
+      </table>
+      <p class="src"><b>Source</b> GasTurb input table published in the portfolio's “Engine analysis” section (step 1, “Input data”), which lists all 62 model parameters.</p>
+    </section>
+  </div>
+
+  <footer class="foot"><span><b>Andreu Martí Peiró</b> · Aerospace engineering portfolio</span><span>Engine analysis · 2 / 6</span></footer>
+</div>
+
+<!-- ===================== Page 3 ===================== -->
+<div class="page">
+  <div class="running"><span><b>Missile design and analysis</b> · Engine analysis</span><span>Williams F107-WR-402</span></div>
+  <div class="running-rule"></div>
+
+  <div class="content">
+    <section style="margin-top:0">
+      <div class="sec-head"><span class="sec-num">04</span><h2>Design point: flow path</h2></div>
+      <p>At the cruise condition the model delivers <strong>2.90 kN of net thrust</strong> with a specific fuel consumption of <strong>22.83 g/(kN·s)</strong>. Figure 1 follows the core flow: compression raises the total pressure to 1608 kPa and the combustor heats the gas to 1227 K; the turbines extract the energy that drives the HP compressor and the fan, and in the mixer the hot flow joins the bypass stream before expanding through the nozzle.</p>
+
+      <figure class="mt-s">
+        <img src="graficos/motor_estaciones_en.svg" alt="Total temperature and pressure by station" />
+        <figcaption><b>Figure 1 ·</b> Total temperature and pressure along the core flow (GasTurb station numbering).</figcaption>
+      </figure>
+
+      <h3 class="sub">Station properties</h3>
+      <table class="compact">
+        <thead><tr><th>Station</th><th>Location</th><th class="num">Mass flow [kg/s]</th><th class="num">Total T [K]</th><th class="num">Total P [kPa]</th><th class="num">Velocity [m/s]</th><th class="num">Mach</th><th class="num">Area [m²]</th></tr></thead>
+        <tbody>
+          <tr><td class="strong">2</td><td>Fan inlet</td><td class="num">8.871</td><td class="num">291.50</td><td class="num">113.00</td><td class="num">167.0</td><td class="num">0.500</td><td class="num">0.0444</td></tr>
+          <tr><td class="strong">21</td><td>Fan exit, core</td><td class="num">4.435</td><td class="num">382.28</td><td class="num">267.95</td><td class="num">191.1</td><td class="num">0.500</td><td class="num">0.0107</td></tr>
+          <tr><td class="strong">13</td><td>Fan exit, bypass</td><td class="num">4.435</td><td class="num">382.28</td><td class="num">251.87</td><td class="num">154.2</td><td class="num">0.400</td><td class="num">0.0136</td></tr>
+          <tr><td class="strong">3</td><td>HPC exit</td><td class="num">4.435</td><td class="num">684.54</td><td class="num">1607.54</td><td class="num">103.3</td><td class="num">0.200</td><td class="num">0.0054</td></tr>
+          <tr><td class="strong">4</td><td>Burner exit</td><td class="num">4.466</td><td class="num">1227.00</td><td class="num">1543.24</td><td class="num">202.6</td><td class="num">0.300</td><td class="num">0.0053</td></tr>
+          <tr><td class="strong">44</td><td>HPT exit</td><td class="num">4.466</td><td class="num">962.68</td><td class="num">477.08</td><td class="num">268.6</td><td class="num">0.450</td><td class="num">0.0106</td></tr>
+          <tr><td class="strong">5</td><td>LPT exit</td><td class="num">4.466</td><td class="num">802.94</td><td class="num">207.67</td><td class="num">272.8</td><td class="num">0.500</td><td class="num">0.0205</td></tr>
+          <tr><td class="strong">6</td><td>Mixer, core inlet</td><td class="num">4.479</td><td class="num">802.61</td><td class="num">205.60</td><td class="num">120.3</td><td class="num">0.217</td><td class="num">0.0427</td></tr>
+          <tr><td class="strong">16</td><td>Mixer, bypass inlet</td><td class="num">4.458</td><td class="num">383.82</td><td class="num">249.35</td><td class="num">109.0</td><td class="num">0.280</td><td class="num">0.0188</td></tr>
+          <tr><td class="strong">64</td><td>Mixer exit</td><td class="num">8.937</td><td class="num">600.51</td><td class="num">215.38</td><td class="num">193.8</td><td class="num">0.404</td><td class="num">0.0400</td></tr>
+          <tr><td class="strong">8</td><td>Nozzle throat</td><td class="num">8.937</td><td class="num">600.51</td><td class="num">213.23</td><td class="num">447.6</td><td class="num">1.000</td><td class="num">0.0256</td></tr>
+        </tbody>
+      </table>
+      <p class="src"><b>Source</b> GasTurb 15 design-point output (“Station Properties”), published in step 2 of the portfolio section. Figure 1 plots the core-flow stations of this table.</p>
+    </section>
+  </div>
+
+  <footer class="foot"><span><b>Andreu Martí Peiró</b> · Aerospace engineering portfolio</span><span>Engine analysis · 3 / 6</span></footer>
+</div>
+
+<!-- ===================== Page 4 ===================== -->
+<div class="page">
+  <div class="running"><span><b>Missile design and analysis</b> · Engine analysis</span><span>Williams F107-WR-402</span></div>
+  <div class="running-rule"></div>
+
+  <div class="content">
+    <section style="margin-top:0">
+      <div class="sec-head"><span class="sec-num">05</span><h2>Design point: performance and cross-checks</h2></div>
+      <p>The overall quantities reported by GasTurb can be rebuilt from the station table. The last column shows the calculation, so the results can be checked for internal consistency.</p>
+      <table class="mt-s">
+        <thead><tr><th>Quantity</th><th class="num">Result</th><th>How it is obtained</th></tr></thead>
+        <tbody>
+          <tr><td>Net thrust, F<sub>N</sub></td><td class="num strong">2.90 kN</td><td class="calc">Direct GasTurb output</td></tr>
+          <tr><td>Fuel flow, W<sub>F</sub></td><td class="num strong">0.0663 kg/s</td><td class="calc">Direct GasTurb output</td></tr>
+          <tr><td>Specific fuel consumption (TSFC)</td><td class="num strong">22.83 g/(kN·s)</td><td class="calc"><i>W<sub>F</sub> / F<sub>N</sub></i> = 66.28 g/s ÷ 2.90 kN</td></tr>
+          <tr><td>Actual inlet mass flow</td><td class="num strong">8.87 kg/s</td><td class="calc"><i>W2Rstd · δ / √θ</i> = 8.0 · (113.0 / 101.325) / √(291.5 / 288.15)</td></tr>
+          <tr><td>Overall pressure ratio</td><td class="num strong">14.23</td><td class="calc"><i>P₃ / P₂</i> = 1607.5 / 113.0</td></tr>
+          <tr><td>Combustor pressure recovery</td><td class="num strong">0.96</td><td class="calc"><i>P₄ / P₃</i> = 1543.2 / 1607.5</td></tr>
+          <tr><td>HPT expansion ratio</td><td class="num strong">3.24</td><td class="calc"><i>P₄ / P₄₄</i> = 1543.2 / 477.1</td></tr>
+          <tr><td>LPT expansion ratio</td><td class="num strong">2.27</td><td class="calc"><i>0.99 · P₄₄ / P₅</i> = 0.99 · 477.1 / 207.7 (turbine interduct loss)</td></tr>
+          <tr><td>Nozzle pressure ratio</td><td class="num strong">2.11</td><td class="calc"><i>P₈ / P<sub>amb</sub></i> = 213.2 / 101.0 &gt; 1.85 (critical): choked nozzle</td></tr>
+          <tr><td>Nozzle throat area, A₈</td><td class="num strong">0.0262 m²</td><td class="calc">Direct GasTurb output (station 8)</td></tr>
+          <tr><td>Core / propulsive efficiency</td><td class="num strong">0.375 / 0.486</td><td class="calc">Direct GasTurb output</td></tr>
+        </tbody>
+      </table>
+      <p class="src"><b>Source</b> GasTurb 15 output (“Overall Performance” and “Station Properties”); own cross-check calculations from those values.</p>
+
+      <div class="grid-2 mt-m">
+        <div>
+          <h3>Component performance</h3>
+          <table class="compact">
+            <thead><tr><th>Component</th><th class="num">Isentropic <span class="nt">η</span></th><th class="num">Polytropic <span class="nt">η</span></th><th class="num">P/P</th></tr></thead>
+            <tbody>
+              <tr><td>Fan / LPC</td><td class="num">0.860</td><td class="num">0.875</td><td class="num">2.30</td></tr>
+              <tr><td>HP compressor</td><td class="num">0.820</td><td class="num">0.858</td><td class="num">6.06</td></tr>
+              <tr><td>Combustor</td><td class="num">0.990</td><td class="num">—</td><td class="num">0.96</td></tr>
+              <tr><td>HP turbine</td><td class="num">0.870</td><td class="num">0.853</td><td class="num">3.24</td></tr>
+              <tr><td>LP turbine</td><td class="num">0.890</td><td class="num">0.879</td><td class="num">2.27</td></tr>
+              <tr><td>Mixer</td><td class="num">0.970</td><td class="num">—</td><td class="num">—</td></tr>
+            </tbody>
+          </table>
+          <p class="src"><b>Source</b> GasTurb 15, “Component Efficiencies”.</p>
+        </div>
+        <div class="callout">
+          <h3>Reading the result</h3>
+          <ul class="dots">
+            <li>The nozzle is <strong>choked</strong>: the jet leaves under-expanded, which is usual for convergent nozzles.</li>
+            <li>With BPR = 1 the jet is fast and the propulsive efficiency (48.6&nbsp;%) is moderate: the price of a compact engine that fits inside the fuselage.</li>
+            <li>The HP turbine runs <strong>uncooled</strong>, which caps the TET at 1227 K in exchange for a simpler engine.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="sec-head"><span class="sec-num">06</span><h2>Parametric study</h2></div>
+      <p>Starting from the design model, GasTurb recalculates the cycle while varying both the burner exit temperature and the HP compressor pressure ratio. All other parameters keep the values on page 2.</p>
+      <table class="compact mt-s">
+        <thead><tr><th>Item</th><th>Value</th></tr></thead>
+        <tbody>
+          <tr><td>Variable 1 · burner exit temperature (TET)</td><td class="strong">1062.5 – 1500 K · 43 values (step ≈ 10.4 K)</td></tr>
+          <tr><td>Variable 2 · HP compressor pressure ratio</td><td class="strong">4 – 10 · 49 values (step 0.125)</td></tr>
+          <tr><td>Outputs</td><td class="strong">Specific fuel consumption (TSFC) and net thrust</td></tr>
+          <tr><td>Cases</td><td class="strong">2107 set up · 1813 converged · 294 without solution (high PR with low TET)</td></tr>
+          <tr><td>Check against the design point</td><td class="strong">PR = 6, TET = 1229 K → 22.85 g/(kN·s) and 2.92 kN, vs 22.83 and 2.90 at design</td></tr>
+        </tbody>
+      </table>
+      <p class="src"><b>Source</b> <code>data/DatosExportados.xlsx</code>, direct GasTurb export (one block per pressure ratio with “Sp. Fuel Consumption” and “Net Thrust”). Available for download in the portfolio.</p>
+    </section>
+  </div>
+
+  <footer class="foot"><span><b>Andreu Martí Peiró</b> · Aerospace engineering portfolio</span><span>Engine analysis · 4 / 6</span></footer>
+</div>
+
+<!-- ===================== Page 5 ===================== -->
+<div class="page">
+  <div class="running"><span><b>Missile design and analysis</b> · Engine analysis</span><span>Williams F107-WR-402</span></div>
+  <div class="running-rule"></div>
+
+  <div class="content">
+    <section style="margin-top:0">
+      <div class="grid-2" style="gap:6mm">
+        <figure>
+          <img src="graficos/motor_mapa_tsfc_en.svg" alt="Specific fuel consumption map" />
+          <figcaption><b>Figure 2 ·</b> Specific fuel consumption. Lighter means lower consumption. The hatched area has no converged solution.</figcaption>
+        </figure>
+        <figure>
+          <img src="graficos/motor_mapa_empuje_en.svg" alt="Net thrust map" />
+          <figcaption><b>Figure 3 ·</b> Net thrust. Darker means more thrust.</figcaption>
+        </figure>
+      </div>
+
+      <h3 class="sub">Excerpt of the exported data · TSFC [g/(kN·s)] / net thrust [kN]</h3>
+      <table class="compact">
+        <thead><tr><th>HPC PR</th><th class="num">1104 K</th><th class="num">1188 K</th><th class="num">1271 K</th><th class="num">1333 K</th><th class="num">1417 K</th><th class="num">1500 K</th></tr></thead>
+        <tbody>
+          <tr><td class="strong">4</td><td class="num">25.25 / 2.36</td><td class="num">24.60 / 2.86</td><td class="num">24.69 / 3.30</td><td class="num">25.08 / 3.59</td><td class="num">25.93 / 3.93</td><td class="num">27.01 / 4.21</td></tr>
+          <tr><td class="strong">6</td><td class="num">24.99 / 2.02</td><td class="num">23.16 / 2.65</td><td class="num">22.79 / 3.18</td><td class="num">23.07 / 3.51</td><td class="num">24.00 / 3.86</td><td class="num">25.18 / 4.15</td></tr>
+          <tr><td class="strong">8</td><td class="na">no solution</td><td class="num">23.16 / 2.34</td><td class="num">21.99 / 2.97</td><td class="num">21.99 / 3.35</td><td class="num">22.82 / 3.74</td><td class="num">24.01 / 4.05</td></tr>
+          <tr class="hl"><td>10</td><td class="na">no solution</td><td class="num">24.29 / 1.99</td><td class="num">21.84 / 2.72</td><td class="num">21.41 / 3.17</td><td class="num">21.96 / 3.61</td><td class="num">23.12 / 3.94</td></tr>
+        </tbody>
+      </table>
+      <p class="src"><b>Source</b> <code>data/DatosExportados.xlsx</code>; values without intermediate rounding. The highlighted row contains the lowest consumption of the whole domain (21.41 g/(kN·s) at 1333 K).</p>
+      <figure class="mt-m">
+        <img src="graficos/motor_carpet_en.svg" alt="Thrust versus consumption carpet plot" />
+        <figcaption><b>Figure 4 ·</b> Thrust–consumption carpet plot built from the same 1813 cases. Each line crossing is a possible design; the star marks the F107-WR-402.</figcaption>
+      </figure>
+    </section>
+  </div>
+
+  <footer class="foot"><span><b>Andreu Martí Peiró</b> · Aerospace engineering portfolio</span><span>Engine analysis · 5 / 6</span></footer>
+</div>
+
+<!-- ===================== Page 6 ===================== -->
+<div class="page">
+  <div class="running"><span><b>Missile design and analysis</b> · Engine analysis</span><span>Williams F107-WR-402</span></div>
+  <div class="running-rule"></div>
+
+  <div class="content">
+    <section style="margin-top:0">
+      <div class="sec-head"><span class="sec-num">07</span><h2>Reading the parametric study</h2></div>
+      <div class="grid-2">
+        <div class="finding">
+          <span class="n">1</span>
+          <h3>Temperature drives thrust</h3>
+          <p>At PR = 6, raising the TET from 1104 to 1500 K doubles the thrust (from 2.02 to 4.15 kN). In return, above the optimum temperature consumption rises quickly: at PR = 4 it reaches 27.0 g/(kN·s) at 1500 K.</p>
+        </div>
+        <div class="finding">
+          <span class="n">2</span>
+          <h3>Each pressure ratio has its optimum temperature</h3>
+          <p>The minimum-consumption TET rises with pressure ratio: 1219 K at PR = 4, 1260 K at PR = 6 and 1333 K at PR = 10. Below it the compressor is oversized; above it the jet leaves too fast.</p>
+        </div>
+        <div class="finding">
+          <span class="n">3</span>
+          <h3>At 1229 K, more compression barely pays off</h3>
+          <p>At the design temperature, going from PR = 6 to PR = 8 only lowers consumption by 2&nbsp;% (22.85 → 22.36) while thrust drops by 9&nbsp;% (2.92 → 2.67 kN). At PR = 10 consumption rises again.</p>
+        </div>
+        <div class="finding">
+          <span class="n">4</span>
+          <h3>The design is a practical optimum</h3>
+          <p>The global minimum, 21.41 g/(kN·s), is 6.2&nbsp;% lower than at design, but it needs 106 K more TET (a cooled turbine) and an HP compressor pressure ratio 65&nbsp;% higher.</p>
+        </div>
+      </div>
+      <p class="src"><b>Source</b> Figures read from <code>data/DatosExportados.xlsx</code> (figures 2–4 and the excerpt on page 5).</p>
+    </section>
+
+    <section>
+      <div class="sec-head"><span class="sec-num">08</span><h2>Conclusions and next steps</h2></div>
+      <div class="grid-2">
+        <p>The model is consistent with the published F107-WR-402 data and with itself: <strong>2.90 kN at 22.83 g/(kN·s)</strong> in cruise, and the parametric study reproduces that point within 1&nbsp;%. The real design gives up 6&nbsp;% of consumption in exchange for compactness and an uncooled turbine.</p>
+        <p><strong>Next steps:</strong> off-design study (Mach, altitude and power setting) and integration with the aerodynamic analysis, to check that the available thrust matches the missile's cruise drag.</p>
+      </div>
+    </section>
+
+    <section>
+      <div class="sec-head"><span class="sec-num">09</span><h2>Files and sources</h2></div>
+      <table class="compact">
+        <tbody>
+          <tr><td style="width:58mm"><code>data/DatosExportados.xlsx</code></td><td>GasTurb export of the parametric study (1813 cases). Basis of figures 2–4 and of the website.</td></tr>
+          <tr><td>GasTurb tables in the portfolio</td><td>Input data, overall performance, components and stations of the design point (“Engine analysis” section).</td></tr>
+          <tr><td>Published F107-WR-402 data</td><td>Values marked “Official”: BPR, TET, turbine stages, no cooling, LP spool speed and overall pressure ratio.</td></tr>
+          <tr><td>GasTurb 15</td><td>Gas turbine simulation software used for the design point and the parametric study.</td></tr>
+        </tbody>
+      </table>
+    </section>
+  </div>
+
+  <footer class="foot"><span><b>Andreu Martí Peiró</b> · Aerospace engineering portfolio</span><span>Engine analysis · 6 / 6</span></footer>
+</div>
+
+</body>
+</html>

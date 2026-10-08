@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Summary — Zaragoza Airport demand</title>
+  <meta name="author" content="Marc Marzal Català; Héctor Hernández de la Rosa; Andreu Martí Peiró" />
+  <link rel="stylesheet" href="resumen.css" />
+</head>
+<body>
+
+<!-- ===================== Page 1 ===================== -->
+<div class="page">
+  <header class="band">
+    <div class="band-photo" style="background-image:url('graficos/zaragoza_portada.jpg')">
+      <small>Photo: Hugo González Duenas (JetPhotos)</small>
+    </div>
+    <div class="band-top">
+      <span class="brand">Aerospace portfolio</span>
+      <span>Technical summary</span>
+    </div>
+    <div class="band-body" style="max-width:112mm">
+      <p class="kicker">Airport planning · Group project</p>
+      <h1>Zaragoza Airport demand</h1>
+      <p class="subtitle">Passenger forecast to 2050 and runway sizing based on Aena monthly data (2004–2026).</p>
+      <div class="band-meta">
+        <div><span>Authors</span>M. Marzal Català · H. Hernández de la Rosa · A. Martí Peiró</div>
+        <div><span>Date</span>October 2026</div>
+      </div>
+    </div>
+  </header>
+
+  <div class="kpis">
+    <div class="kpi"><div class="kpi-label">Data analysed</div><div class="kpi-value">268</div><div class="kpi-note">months, Jan 2004 – Apr 2026</div></div>
+    <div class="kpi"><div class="kpi-label">Passengers in 2025</div><div class="kpi-value">707,493</div><div class="kpi-note">base year</div></div>
+    <div class="kpi"><div class="kpi-label">Traffic–GDP elasticity</div><div class="kpi-value">1.07</div><div class="kpi-note">78 quarters</div></div>
+    <div class="kpi"><div class="kpi-label">Passengers in 2050</div><div class="kpi-value">0.92–1.07<small>M</small></div><div class="kpi-note">three scenarios</div></div>
+    <div class="kpi"><div class="kpi-label">Design peak hour</div><div class="kpi-value">444<small>pax/h</small></div><div class="kpi-note">August, base scenario</div></div>
+    <div class="kpi"><div class="kpi-label">Runways required</div><div class="kpi-value">1</div><div class="kpi-note">at 11–13&nbsp;% of capacity</div></div>
+  </div>
+
+  <div class="content">
+    <section>
+      <div class="sec-head"><span class="sec-num">01</span><h2>Objective</h2></div>
+      <div class="grid-60">
+        <div>
+          <p class="lead">Estimate how many passengers Zaragoza Airport will handle in 2050, how they will be spread over the year and what runway infrastructure the busiest hour will require.</p>
+          <p>The analysis starts from Aena's official monthly figures and links their evolution to the economy, measured by GDP. The result is not a single prediction but a plausible demand range within which the airport must operate.</p>
+        </div>
+        <aside class="card">
+          <h3>At a glance</h3>
+          <dl class="spec">
+            <dt>Series</dt><dd>268 months (244 without the pandemic)</dd>
+            <dt>Regression</dt><dd>78 quarters</dd>
+            <dt>Horizon</dt><dd>2050 (25 years from 2025)</dd>
+            <dt>Scenarios</dt><dd>GDP at 1.0 / 1.5 / 2.2&nbsp;% a year</dd>
+          </dl>
+        </aside>
+      </div>
+    </section>
+
+    <section>
+      <div class="sec-head"><span class="sec-num">02</span><h2>Data sources</h2></div>
+      <p>All calculations are carried out in a working spreadsheet built from these sources. Each table and figure in this summary states its origin in a <span class="src" style="display:inline"><b>Source</b></span> line.</p>
+      <table class="compact mt-s">
+        <thead><tr><th style="width:52mm">Source</th><th>What it provides</th><th style="width:34mm">Period</th><th style="width:34mm">Where it is used</th></tr></thead>
+        <tbody>
+          <tr><td class="strong">Aena · monthly passenger traffic</td><td>Departing, arriving and total passengers at the airport</td><td>Jan 2004 – Apr 2026</td><td>Whole series</td></tr>
+          <tr><td class="strong">Aena · monthly aircraft movements</td><td>Landings and take-offs</td><td>Jan 2023 – Apr 2026</td><td>Passengers per movement</td></tr>
+          <tr><td class="strong">Quarterly GDP index</td><td>Economic trend (included in the spreadsheet; no source or base year stated)</td><td>2004 Q3 – 2025 Q4</td><td>Elasticity and scenarios</td></tr>
+          <tr><td class="strong">Aena · 2025 annual report</td><td>Published annual total: 707,493 passengers, equal to the sum of the 12 months in the spreadsheet</td><td>2025</td><td>Cross-check</td></tr>
+          <tr><td class="strong">Press and Wikipedia</td><td>Totals for other years and later events (Ryanair, 2026)</td><td>2008 – 2026</td><td>Cross-check and context</td></tr>
+        </tbody>
+      </table>
+      <p class="src"><b>Source</b> Working spreadsheet <code>evolucion_trafico_zaragoza.xlsx</code>; full references on page 6.</p>
+    </section>
+  </div>
+
+  <footer class="foot"><span><b>Marzal · Hernández · Martí</b> · Aerospace engineering portfolio</span><span>Zaragoza Airport demand · 1 / 6</span></footer>
+</div>
+
+<!-- ===================== Page 2 ===================== -->
+<div class="page">
+  <div class="running"><span><b>Airport planning</b> · Zaragoza Airport</span><span>2050 forecast</span></div>
+  <div class="running-rule"></div>
+
+  <div class="content">
+    <section style="margin-top:0">
+      <div class="sec-head"><span class="sec-num">03</span><h2>Spreadsheet structure</h2></div>
+      <table class="compact">
+        <thead><tr><th style="width:48mm">Sheet</th><th>Content</th><th style="width:30mm">Role</th></tr></thead>
+        <tbody>
+          <tr><td class="strong">Comparativa mes año anterior</td><td>Full Aena series (268 months) and year-on-year change</td><td>Input data</td></tr>
+          <tr><td class="strong">Análisis tendencia</td><td>Series without 2020–2021 (244 months), moving average and seasonal index</td><td>Core calculation</td></tr>
+          <tr><td class="strong">Promedios · Media móvil total</td><td>Mean seasonal index per month; monthly and quarterly moving average</td><td>Seasonality and trend</td></tr>
+          <tr><td class="strong">PIB</td><td>Logarithms, elasticity, growth rate and 2050 scenarios</td><td>Forecast</td></tr>
+          <tr><td class="strong">HP · Operaciones</td><td>Passengers per month, day and peak hour; movements per hour and runways</td><td>Sizing</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <div class="sec-head"><span class="sec-num">04</span><h2>Method step by step</h2></div>
+      <h3>1 · Cleaning the series</h3>
+      <p>The 24 months of 2020 and 2021 are removed: the pandemic produced anomalous values (4 passengers in April 2020) and disproportionate rebounds in 2021. They are not replaced by estimates; they are simply left out of all calculations, so the core analysis rests on 244 months.</p>
+
+      <h3 class="sub">2 · Trend: 12-month centred moving average</h3>
+      <div class="grid-2" style="grid-template-columns: 1fr 78mm">
+        <div>
+          <div class="formula"><i>MA<sub>t</sub></i> = (1/12) · [ 0.5·<i>X<sub>t−6</sub></i> + <i>X<sub>t−5</sub></i> + … + <i>X<sub>t+5</sub></i> + 0.5·<i>X<sub>t+6</sub></i> ]<small><i>X<sub>t</sub></i>: passengers in month <i>t</i>. Every calendar month carries the same weight, which cancels out seasonality.</small></div>
+          <p>With an even window the centre falls between two months, so the end points carry half weight. Six months are lost at each end: the latest available trend is October 2025 (59,066 passengers a month, ≈ 708,800 a year, consistent with the 707,493 of 2025).</p>
+          <h3 class="sub">3 · Seasonality: seasonal index</h3>
+          <div class="formula"><i>I<sub>t</sub></i> = <i>X<sub>t</sub></i> / <i>MA<sub>t</sub></i> &nbsp;·&nbsp; <i>I<sub>m</sub></i> = mean of <i>I<sub>t</sub></i> over all years for month <i>m</i> &nbsp;·&nbsp; Σ <i>I<sub>m</sub></i> ≈ 12</div>
+          <p><strong>Example:</strong> January 2025 had 44,040 passengers against a trend of 58,610.25, so <i>I</i> = 44,040 / 58,610 = 0.75: 25&nbsp;% below an average month. Averaging every January gives the January index, 0.71.</p>
+        </div>
+        <div>
+          <table class="compact">
+            <thead><tr><th>Month</th><th class="num">Passengers</th><th class="num">Weight</th></tr></thead>
+            <tbody>
+              <tr><td>Jul 2024</td><td class="num">66,492</td><td class="num">0.5</td></tr>
+              <tr><td>Aug 2024</td><td class="num">71,136</td><td class="num">1</td></tr>
+              <tr><td>Sep 2024</td><td class="num">64,624</td><td class="num">1</td></tr>
+              <tr><td>Oct 2024</td><td class="num">61,961</td><td class="num">1</td></tr>
+              <tr><td>Nov 2024</td><td class="num">48,343</td><td class="num">1</td></tr>
+              <tr><td>Dec 2024</td><td class="num">54,624</td><td class="num">1</td></tr>
+              <tr class="hl"><td>Jan 2025</td><td class="num">44,040</td><td class="num">1</td></tr>
+              <tr><td>Feb 2025</td><td class="num">43,859</td><td class="num">1</td></tr>
+              <tr><td>Mar 2025</td><td class="num">52,160</td><td class="num">1</td></tr>
+              <tr><td>Apr 2025</td><td class="num">67,643</td><td class="num">1</td></tr>
+              <tr><td>May 2025</td><td class="num">64,862</td><td class="num">1</td></tr>
+              <tr><td>Jun 2025</td><td class="num">61,293</td><td class="num">1</td></tr>
+              <tr><td>Jul 2025</td><td class="num">71,064</td><td class="num">0.5</td></tr>
+              <tr><td class="strong">Moving average</td><td class="num strong" colspan="2">58,610.25</td></tr>
+            </tbody>
+          </table>
+          <p class="src"><b>Source</b> Aena data, sheet “Análisis tendencia”.</p>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <footer class="foot"><span><b>Marzal · Hernández · Martí</b> · Aerospace engineering portfolio</span><span>Zaragoza Airport demand · 2 / 6</span></footer>
+</div>
+
+<!-- ===================== Page 3 ===================== -->
+<div class="page">
+  <div class="running"><span><b>Airport planning</b> · Zaragoza Airport</span><span>2050 forecast</span></div>
+  <div class="running-rule"></div>
+
+  <div class="content">
+    <section style="margin-top:0">
+      <h3>4 · Elasticity of traffic with respect to GDP</h3>
+      <div class="grid-2" style="grid-template-columns: 1fr 88mm; gap:6mm">
+        <div>
+          <p>Traffic <i>T</i> and GDP are assumed to follow a power law, <i>T = A · GDP<sup>ε</sup></i>. Taking logarithms gives a straight line whose slope is the elasticity:</p>
+          <div class="formula"><i>ln T</i> = <i>ln A</i> + ε · <i>ln GDP</i> &nbsp;→&nbsp; ε = SLOPE(<i>ln T</i> ; <i>ln GDP</i>)<small>Least squares over 78 quarters (quarterly moving average, 2020–2021 excluded).</small></div>
+          <p>Result: <strong>ε = 1.07</strong>. For every 1&nbsp;% of GDP growth, traffic grows by 1.07&nbsp;%. The scatter is wide (R² = 0.11), so GDP explains only part of the variation in traffic.</p>
+          <p>The isolated point at the bottom right is 2025 Q4, which contains October only. Without it the slope would be 1.50 (note 1, page 6).</p>
+        </div>
+        <figure>
+          <img src="graficos/zgz_elasticidad_en.svg" alt="Scatter of ln GDP versus ln traffic" />
+          <figcaption><b>Figure 1 ·</b> Each point is a quarter. The orange line reproduces the spreadsheet elasticity.</figcaption>
+          <p class="src"><b>Source</b> Sheet “PIB”; line recomputed from the same 78 points (ε = 1.0718).</p>
+        </figure>
+      </div>
+
+      <h3 class="sub">5 · Growth scenarios to 2050</h3>
+      <p>The compound annual growth rate (CAGR) of the GDP index is used as a reference for the scenarios:</p>
+      <div class="formula"><i>r</i> = (<i>V<sub>final</sub></i> / <i>V<sub>initial</sub></i>)<sup>1/<i>t</i></sup> − 1 = (128.15 / 91.99)<sup>1/21.5</sup> − 1 = <strong>1.55&nbsp;% a year</strong><small>86 quarters (21.5 years) between the first and last data points. It supports the 1.5&nbsp;% base scenario.</small></div>
+      <div class="formula"><i>i</i> = ε · <i>g</i> &nbsp;·&nbsp; <i>PAX<sub>2050</sub></i> = <i>PAX<sub>2025</sub></i> · (1 + <i>i</i>)<sup>25</sup><small><i>g</i>: scenario GDP growth; <i>i</i>: annual traffic growth; <i>PAX<sub>2025</sub></i> = 707,493 (sum of the 12 months of 2025).</small></div>
+      <table class="compact mt-s">
+        <thead><tr><th>Scenario</th><th class="num">GDP, <i>g</i></th><th class="num">Traffic, <i>i</i></th><th>Calculation</th><th class="num">Passengers 2050</th></tr></thead>
+        <tbody>
+          <tr><td>Pessimistic</td><td class="num">1.0&nbsp;%</td><td class="num">1.07&nbsp;%</td><td class="calc">707,493 · 1.0107<sup>25</sup></td><td class="num strong">923,583</td></tr>
+          <tr class="hl"><td>Base</td><td class="num">1.5&nbsp;%</td><td class="num">1.61&nbsp;%</td><td class="calc">707,493 · 1.0161<sup>25</sup></td><td class="num">1,054,129</td></tr>
+          <tr><td>Optimistic</td><td class="num">2.2&nbsp;%</td><td class="num">1.67&nbsp;%*</td><td class="calc">707,493 · 1.0167<sup>25</sup></td><td class="num strong">1,069,258</td></tr>
+        </tbody>
+      </table>
+      <p class="src"><b>Source</b> Sheet “PIB”. * The spreadsheet formula uses the historical 1.55&nbsp;% instead of 2.2&nbsp;% (note 2).</p>
+
+      <h3 class="sub">6 · From annual traffic to runways</h3>
+      <div class="formula"><i>MMT</i> = <i>PAX<sub>2050</sub></i> · <i>I<sub>m</sub></i> / 12 &nbsp;→&nbsp; <i>DMT</i> = <i>MMT</i> / 31 &nbsp;→&nbsp; <i>HDP</i> = <i>DMT</i> · 0.11 &nbsp;→&nbsp; <i>mov/h</i> = <i>HDP</i> / (100 · 0.85) &nbsp;→&nbsp; <span style="white-space:nowrap"><i>runways</i> = <i>mov/h</i> / 40</span><small>Peak month → average day → peak hour (11&nbsp;% of the day) → movements (100-seat aircraft at 85&nbsp;% load) → runways (40 movements per hour, the cautious end of the 40–45 range). Sheets “HP” and “Operaciones”.</small></div>
+    </section>
+  </div>
+
+  <footer class="foot"><span><b>Marzal · Hernández · Martí</b> · Aerospace engineering portfolio</span><span>Zaragoza Airport demand · 3 / 6</span></footer>
+</div>
+
+<!-- ===================== Page 4 ===================== -->
+<div class="page">
+  <div class="running"><span><b>Airport planning</b> · Zaragoza Airport</span><span>2050 forecast</span></div>
+  <div class="running-rule"></div>
+
+  <div class="content">
+    <section style="margin-top:0">
+      <div class="sec-head"><span class="sec-num">05</span><h2>Results: trend and seasonality</h2></div>
+      <figure>
+        <img src="graficos/zgz_serie_en.svg" alt="Monthly passengers and trend 2004-2026" />
+        <figcaption><b>Figure 2 ·</b> Monthly passengers and trend. Peak in 2011, steady decline until 2019 and post-pandemic recovery to about 59,000 passengers a month.</figcaption>
+        <p class="src"><b>Source</b> Aena (268 months, sheet “Comparativa mes año anterior”); trend from sheet “Análisis tendencia”.</p>
+      </figure>
+
+      <div class="grid-2 mt-m" style="grid-template-columns: 88mm 1fr; gap:6mm">
+        <figure>
+          <img src="graficos/zgz_estacionalidad_en.svg" alt="Seasonal index by month" />
+          <figcaption><b>Figure 3 ·</b> August has 42&nbsp;% more passengers than an average month; January, 29&nbsp;% fewer.</figcaption>
+        </figure>
+        <div>
+          <table class="compact">
+            <thead><tr><th>Month</th><th class="num">Departures</th><th class="num">Arrivals</th><th class="num">Total</th></tr></thead>
+            <tbody>
+              <tr><td>January</td><td class="num">0.74</td><td class="num">0.68</td><td class="num">0.71</td></tr>
+              <tr><td>February</td><td class="num">0.76</td><td class="num">0.76</td><td class="num">0.76</td></tr>
+              <tr><td>March</td><td class="num">0.99</td><td class="num">0.97</td><td class="num">0.98</td></tr>
+              <tr><td>April</td><td class="num">1.04</td><td class="num">1.06</td><td class="num">1.05</td></tr>
+              <tr><td>May</td><td class="num">0.89</td><td class="num">0.92</td><td class="num">0.91</td></tr>
+              <tr><td>June</td><td class="num">1.05</td><td class="num">0.98</td><td class="num">1.02</td></tr>
+              <tr><td>July</td><td class="num">1.37</td><td class="num">1.33</td><td class="num">1.35</td></tr>
+              <tr class="hl"><td>August</td><td class="num">1.42</td><td class="num">1.43</td><td class="num">1.42</td></tr>
+              <tr><td>September</td><td class="num">1.09</td><td class="num">1.16</td><td class="num">1.13</td></tr>
+              <tr><td>October</td><td class="num">0.98</td><td class="num">0.99</td><td class="num">0.98</td></tr>
+              <tr><td>November</td><td class="num">0.79</td><td class="num">0.77</td><td class="num">0.78</td></tr>
+              <tr><td>December</td><td class="num">0.85</td><td class="num">0.92</td><td class="num">0.88</td></tr>
+              <tr><td class="strong">Sum</td><td class="num strong">11.97</td><td class="num strong">11.97</td><td class="num strong">11.97</td></tr>
+            </tbody>
+          </table>
+          <p class="src"><b>Source</b> Sheet “Promedios” (mean of each month's indices across all years).</p>
+        </div>
+      </div>
+      <p class="mt-s">Departures and arrivals evolve almost identically (50.1&nbsp;% and 49.9&nbsp;% split), so the sizing uses the total index. August, with the highest index, is the <strong>design month</strong>.</p>
+    </section>
+  </div>
+
+  <footer class="foot"><span><b>Marzal · Hernández · Martí</b> · Aerospace engineering portfolio</span><span>Zaragoza Airport demand · 4 / 6</span></footer>
+</div>
+
+<!-- ===================== Page 5 ===================== -->
+<div class="page">
+  <div class="running"><span><b>Airport planning</b> · Zaragoza Airport</span><span>2050 forecast</span></div>
+  <div class="running-rule"></div>
+
+  <div class="content">
+    <section style="margin-top:0">
+      <div class="sec-head"><span class="sec-num">06</span><h2>Results: peak hour and runways in 2050</h2></div>
+      <table class="compact">
+        <thead><tr><th>Month</th><th class="num">Index</th><th class="num">MMT base</th><th class="num">DMT base</th><th class="num">HDP pessim.</th><th class="num">HDP base</th><th class="num">HDP optim.</th></tr></thead>
+        <tbody>
+          <tr><td>January</td><td class="num">0.71</td><td class="num">62,715</td><td class="num">2,023</td><td class="num">195</td><td class="num">223</td><td class="num">226</td></tr>
+          <tr><td>February</td><td class="num">0.76</td><td class="num">66,502</td><td class="num">2,145</td><td class="num">207</td><td class="num">236</td><td class="num">239</td></tr>
+          <tr><td>March</td><td class="num">0.98</td><td class="num">86,192</td><td class="num">2,780</td><td class="num">268</td><td class="num">306</td><td class="num">310</td></tr>
+          <tr><td>April</td><td class="num">1.05</td><td class="num">92,181</td><td class="num">2,974</td><td class="num">287</td><td class="num">327</td><td class="num">332</td></tr>
+          <tr><td>May</td><td class="num">0.91</td><td class="num">79,706</td><td class="num">2,571</td><td class="num">248</td><td class="num">283</td><td class="num">287</td></tr>
+          <tr><td>June</td><td class="num">1.02</td><td class="num">89,395</td><td class="num">2,884</td><td class="num">278</td><td class="num">317</td><td class="num">322</td></tr>
+          <tr><td>July</td><td class="num">1.35</td><td class="num">118,416</td><td class="num">3,820</td><td class="num">368</td><td class="num">420</td><td class="num">426</td></tr>
+          <tr class="hl"><td>August</td><td class="num">1.42</td><td class="num">125,083</td><td class="num">4,035</td><td class="num">389</td><td class="num">444</td><td class="num">450</td></tr>
+          <tr><td>September</td><td class="num">1.13</td><td class="num">98,897</td><td class="num">3,190</td><td class="num">307</td><td class="num">351</td><td class="num">356</td></tr>
+          <tr><td>October</td><td class="num">0.98</td><td class="num">86,129</td><td class="num">2,778</td><td class="num">268</td><td class="num">306</td><td class="num">310</td></tr>
+          <tr><td>November</td><td class="num">0.78</td><td class="num">68,686</td><td class="num">2,216</td><td class="num">214</td><td class="num">244</td><td class="num">247</td></tr>
+          <tr><td>December</td><td class="num">0.88</td><td class="num">77,603</td><td class="num">2,503</td><td class="num">241</td><td class="num">275</td><td class="num">279</td></tr>
+        </tbody>
+      </table>
+      <p class="src"><b>Source</b> Sheet “HP”. MMT: passengers in the month; DMT: passengers on an average day; HDP: passengers in the peak hour.</p>
+
+      <h3 class="sub">Design value calculation · August, base scenario</h3>
+      <div class="flow small">
+        <div class="node"><div class="v">1,054,129</div><div class="l">passengers in 2050</div></div>
+        <div class="op"><span>× 1.424 / 12</span><span class="arr">→</span></div>
+        <div class="node"><div class="v">125,083</div><div class="l">in August</div></div>
+        <div class="op"><span>/ 31</span><span class="arr">→</span></div>
+        <div class="node"><div class="v">4,035</div><div class="l">per average day</div></div>
+        <div class="op"><span>× 0.11</span><span class="arr">→</span></div>
+        <div class="node"><div class="v">444</div><div class="l">in the peak hour</div></div>
+        <div class="op"><span>/ 85</span><span class="arr">→</span></div>
+        <div class="node"><div class="v">5.2</div><div class="l">movements/h</div></div>
+        <div class="op"><span>/ 40</span><span class="arr">→</span></div>
+        <div class="node end"><div class="v">0.13</div><div class="l">runways</div></div>
+      </div>
+
+      <div class="grid-2 mt-m">
+        <div>
+          <h3>Movements and runways</h3>
+          <table class="compact">
+            <thead><tr><th>Quantity</th><th class="num">Pessim.</th><th class="num">Base</th><th class="num">Optim.</th></tr></thead>
+            <tbody>
+              <tr><td>Peak-hour passengers</td><td class="num">389</td><td class="num strong">444</td><td class="num">450</td></tr>
+              <tr><td>Movements per hour (/ 85)</td><td class="num">4.6</td><td class="num strong">5.2</td><td class="num">5.3</td></tr>
+              <tr><td>Runways required (/ 40)</td><td class="num">0.11</td><td class="num strong">0.13</td><td class="num">0.13</td></tr>
+            </tbody>
+          </table>
+          <p class="src"><b>Source</b> Sheet “Operaciones”.</p>
+          <p class="mt-s">In every scenario demand uses between 11&nbsp;% and 13&nbsp;% of the capacity of a single runway.</p>
+        </div>
+        <div>
+          <h3>Cross-check: passengers per movement in 2025</h3>
+          <table class="compact">
+            <thead><tr><th>Month</th><th class="num">Passengers</th><th class="num">Movements</th><th class="num">Pax/mov</th></tr></thead>
+            <tbody>
+              <tr><td>January</td><td class="num">44,040</td><td class="num">674</td><td class="num">65.3</td></tr>
+              <tr><td>April</td><td class="num">67,643</td><td class="num">930</td><td class="num">72.7</td></tr>
+              <tr><td>July</td><td class="num">71,064</td><td class="num">932</td><td class="num">76.2</td></tr>
+              <tr class="hl"><td>August</td><td class="num">73,934</td><td class="num">849</td><td class="num">87.1</td></tr>
+              <tr><td>October</td><td class="num">66,268</td><td class="num">1,081</td><td class="num">61.3</td></tr>
+              <tr><td class="strong">Year 2025</td><td class="num strong">707,493</td><td class="num strong">10,508</td><td class="num strong">67.3</td></tr>
+            </tbody>
+          </table>
+          <p class="src"><b>Source</b> Aena, sheet “Operaciones”. Average of the last 40 months: 67.4 pax/mov.</p>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <footer class="foot"><span><b>Marzal · Hernández · Martí</b> · Aerospace engineering portfolio</span><span>Zaragoza Airport demand · 5 / 6</span></footer>
+</div>
+
+<!-- ===================== Page 6 ===================== -->
+<div class="page">
+  <div class="running"><span><b>Airport planning</b> · Zaragoza Airport</span><span>2050 forecast</span></div>
+  <div class="running-rule"></div>
+
+  <div class="content">
+    <section style="margin-top:0">
+      <div class="sec-head"><span class="sec-num">07</span><h2>Notes on the data and calculations</h2></div>
+      <table class="compact">
+        <thead><tr><th style="width:5mm">#</th><th style="width:40mm">Note</th><th>Detail</th><th class="num">Impact</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td class="strong">Partial quarter in the elasticity</td><td>The 2025 Q4 point contains October only and lowers the slope. Without it, ε = 1.50 and the scenarios would give 1.03, 1.24 and 1.60 M passengers. <em>Own calculation.</em></td><td class="num"><span class="tag alto">High</span></td></tr>
+          <tr><td>2</td><td class="strong">Optimistic scenario</td><td>The formula uses the historical 1.55&nbsp;% instead of the 2.2&nbsp;% on the label. With 2.2&nbsp;% the result would be ≈ 1,267,000 passengers. <em>Own calculation.</em></td><td class="num"><span class="tag alto">High</span></td></tr>
+          <tr><td>3</td><td class="strong">Peak-hour parameters</td><td>The 11&nbsp;% factor has no source; 85 pax/mov is used against 67.4 observed (with it, 5.8–6.7 mov/h). The conclusion does not change. <em>Own calculation.</em></td><td class="num"><span class="tag medio">Medium</span></td></tr>
+          <tr><td>4</td><td class="strong">2019 data</td><td>The spreadsheet total (344,978) is close to the published international passengers (345,301), not to the total (467,774).</td><td class="num"><span class="tag medio">Medium</span></td></tr>
+          <tr><td>5</td><td class="strong">GDP index</td><td>No source, scope or base year; it does not appear to be seasonally adjusted.</td><td class="num"><span class="tag medio">Medium</span></td></tr>
+          <tr><td>6</td><td class="strong">Joining 2019 and 2022</td><td>Ten moving averages mix months from both years; effect on the indices &lt; 0.01. <em>Own calculation.</em></td><td class="num"><span class="tag bajo">Low</span></td></tr>
+          <tr><td>7</td><td class="strong">Year-on-year change</td><td>The column on the first sheet shows some decreases as increases.</td><td class="num"><span class="tag bajo">Low</span></td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <div class="sec-head"><span class="sec-num">08</span><h2>Conclusions</h2></div>
+      <div class="grid-2">
+        <div class="callout">
+          <h3>One runway is enough in every scenario</h3>
+          <p>The 2050 peak hour requires between 4.6 and 5.3 movements per hour. Even correcting notes 1 to 3 at once (≈ 1.6 M passengers and 67.4 pax/mov) would give about 10 movements per hour, a quarter of the runway's capacity. <em>Own calculation.</em></p>
+        </div>
+        <div class="callout" style="border-left-color: var(--blue)">
+          <h3 style="color: var(--blue)">After the spreadsheet</h3>
+          <p>In September 2025 Ryanair announced a 45&nbsp;% capacity cut at Zaragoza, and August 2026 recorded 63,717 passengers (−13.8&nbsp;% year on year). Since the scenarios start from 2025, they should be reviewed with the 2026 data.</p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="sec-head"><span class="sec-num">09</span><h2>References</h2></div>
+      <ul class="dots" style="font-size:7.2pt; line-height:1.45">
+        <li>Aena. (2026). <em>El Aeropuerto de Zaragoza cierra 2025 con más de 707.000 pasajeros.</em> aena.es</li>
+        <li>Aena. Monthly traffic statistics for Zaragoza Airport (passengers and movements), 2004–2026.</li>
+        <li>Aragón Digital. (2020, 13 January). <em>El Aeropuerto de Zaragoza bate el récord de tráfico de mercancías con más de 180.000 toneladas.</em></li>
+        <li>Aragón Digital. (2025, 3 September). <em>Ryanair recorta un 45&nbsp;% su capacidad en Zaragoza tras la subida de tasas de Aena.</em></li>
+        <li>El Español. (2026, 23 September). <em>El Aeropuerto de Zaragoza pierde 10.000 pasajeros en agosto respecto a 2025.</em></li>
+        <li>Wikipedia. (n.d.). <em>Aeropuerto de Zaragoza</em> · <em>Zaragoza Airport.</em></li>
+      </ul>
+      <p class="src mt-s"><b>Files</b> <code>data/evolucion_trafico_zaragoza.xlsx</code> (working spreadsheet) and <code>Informe_demanda_aeropuerto_Zaragoza.pdf</code> (full report, in Spanish), downloadable from the portfolio.</p>
+    </section>
+  </div>
+
+  <footer class="foot"><span><b>Marzal · Hernández · Martí</b> · Aerospace engineering portfolio</span><span>Zaragoza Airport demand · 6 / 6</span></footer>
+</div>
+
+</body>
+</html>

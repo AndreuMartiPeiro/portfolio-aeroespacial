@@ -2,7 +2,7 @@
  * build.js — Genera los resúmenes en PDF de los apartados del portfolio.
  *
  *   node tools/resumenes/build.js            (todos)
- *   node tools/resumenes/build.js motor      (solo uno)
+ *   node tools/resumenes/build.js motor      (solo los que empiecen por «motor»)
  *
  * 1. Regenera las figuras (graficos.py) a partir de los datos de la web.
  * 2. Imprime cada plantilla HTML a PDF con Chromium (Playwright).
@@ -22,8 +22,10 @@ const DIR = __dirname;
 const OUT = path.resolve(DIR, '../../data/resumenes');
 
 const RESUMENES = [
-  { html: 'motor.html', pdf: 'Resumen_Analisis_Motor_F107.pdf', title: 'Análisis termodinámico del motor F107-WR-402' },
-  { html: 'zaragoza.html', pdf: 'Resumen_Demanda_Aeropuerto_Zaragoza.pdf', title: 'Demanda del aeropuerto de Zaragoza' }
+  { html: 'motor_es.html', pdf: 'Resumen_Analisis_Motor_F107.pdf' },
+  { html: 'motor_en.html', pdf: 'Summary_Engine_Analysis_F107.pdf' },
+  { html: 'zaragoza_es.html', pdf: 'Resumen_Demanda_Aeropuerto_Zaragoza.pdf' },
+  { html: 'zaragoza_en.html', pdf: 'Summary_Zaragoza_Airport_Demand.pdf' }
 ];
 
 (async () => {
