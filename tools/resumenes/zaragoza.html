@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Resumen — Demanda del aeropuerto de Zaragoza</title>
+  <meta name="author" content="Marc Marzal Català; Héctor Hernández de la Rosa; Andreu Martí Peiró" />
+  <link rel="stylesheet" href="resumen.css" />
+</head>
+<body>
+
+<!-- ===================== Página 1 ===================== -->
+<div class="page">
+  <header class="band">
+    <div class="band-photo" style="background-image:url('graficos/zaragoza_portada.jpg')">
+      <small>Fotografía: Hugo González Duenas (JetPhotos)</small>
+    </div>
+    <div class="band-top">
+      <span class="brand">Portfolio aeroespacial</span>
+      <span>Resumen técnico</span>
+    </div>
+    <div class="band-body" style="max-width:112mm">
+      <p class="kicker">Planificación aeroportuaria · Proyecto en grupo</p>
+      <h1>Demanda del aeropuerto de Zaragoza</h1>
+      <p class="subtitle">Previsión de pasajeros a 2050 y dimensionamiento de pista a partir de los datos mensuales de Aena (2004–2026).</p>
+      <div class="band-meta">
+        <div><span>Autores</span>M. Marzal Català · H. Hernández de la Rosa · A. Martí Peiró</div>
+        <div><span>Fecha</span>Octubre 2026</div>
+      </div>
+    </div>
+  </header>
+
+  <div class="kpis">
+    <div class="kpi"><div class="kpi-label">Datos analizados</div><div class="kpi-value">268</div><div class="kpi-note">meses, ene. 2004 – abr. 2026</div></div>
+    <div class="kpi"><div class="kpi-label">Pasajeros en 2025</div><div class="kpi-value">707.493</div><div class="kpi-note">año de partida</div></div>
+    <div class="kpi"><div class="kpi-label">Elasticidad tráfico–PIB</div><div class="kpi-value">1,07</div><div class="kpi-note">78 trimestres</div></div>
+    <div class="kpi"><div class="kpi-label">Pasajeros en 2050</div><div class="kpi-value">0,92–1,07<small>M</small></div><div class="kpi-note">tres escenarios</div></div>
+    <div class="kpi"><div class="kpi-label">Hora punta de diseño</div><div class="kpi-value">444<small>pax/h</small></div><div class="kpi-note">agosto, escenario base</div></div>
+    <div class="kpi"><div class="kpi-label">Pistas necesarias</div><div class="kpi-value">1</div><div class="kpi-note">al 11–13 % de su capacidad</div></div>
+  </div>
+
+  <div class="content">
+    <section>
+      <div class="sec-head"><span class="sec-num">01</span><h2>Objetivo</h2></div>
+      <div class="grid-60">
+        <div>
+          <p class="lead">Estimar cuántos pasajeros tendrá el aeropuerto de Zaragoza en 2050, cómo se repartirán a lo largo del año y qué infraestructura de pista exigirá la hora más cargada.</p>
+          <p>El análisis parte de las cifras mensuales oficiales de Aena (salidas, llegadas y total) y relaciona su evolución con la de la economía, medida por el PIB. El resultado no es una única predicción, sino un rango de demanda plausible dentro del cual debe funcionar el aeropuerto.</p>
+        </div>
+        <aside class="card">
+          <h3>Datos de partida</h3>
+          <dl class="spec">
+            <dt>Fuente</dt><dd>Aena, cifras mensuales oficiales</dd>
+            <dt>Periodo</dt><dd>Enero 2004 – abril 2026 (268 meses)</dd>
+            <dt>Magnitudes</dt><dd>Salidas, llegadas y total</dd>
+            <dt>Control</dt><dd>2025 coincide con el balance anual de Aena</dd>
+          </dl>
+        </aside>
+      </div>
+    </section>
+
+    <section>
+      <div class="sec-head"><span class="sec-num">02</span><h2>Metodología</h2></div>
+      <p>El Excel de trabajo reproduce la cadena de cálculo de una previsión de demanda, de la serie histórica al dimensionamiento de la pista.</p>
+      <div class="chain c3 mt-s">
+        <div class="step"><span class="n">Paso 1</span><h3>Depuración de datos</h3><p>Se excluyen 2020 y 2021: la pandemia dejó valores anómalos (4 pasajeros en abril de 2020). Quedan 244 meses.</p></div>
+        <div class="step"><span class="n">Paso 2</span><h3>Tendencia</h3><p>Media móvil centrada de 12 meses: cada mes del año pesa lo mismo, así se anula la estacionalidad y queda el nivel de fondo.</p></div>
+        <div class="step"><span class="n">Paso 3</span><h3>Estacionalidad</h3><p>Índice de cada mes = pasajeros reales / media móvil, promediado entre años. Los doce índices suman ≈ 12.</p></div>
+        <div class="step"><span class="n">Paso 4</span><h3>Elasticidad frente al PIB</h3><p>Regresión entre ln tráfico y ln PIB en 78 trimestres. La pendiente, ε = 1,07, mide el % que crece el tráfico por cada 1 % de PIB.</p></div>
+        <div class="step"><span class="n">Paso 5</span><h3>Escenarios 2050</h3><p>PIB al 1,0 / 1,5 / 2,2 % anual. El tráfico crece al ritmo i = ε · g, de forma compuesta durante 25 años desde 2025.</p></div>
+        <div class="step"><span class="n">Paso 6</span><h3>Hora punta y pistas</h3><p>Del año al mes punta (agosto), al día medio y a la hora punta; después, a operaciones por hora y número de pistas.</p></div>
+      </div>
+    </section>
+  </div>
+
+  <footer class="foot"><span><b>Marzal · Hernández · Martí</b> · Portfolio de ingeniería aeroespacial</span><span>Demanda del aeropuerto de Zaragoza · 1 / 3</span></footer>
+</div>
+
+<!-- ===================== Página 2 ===================== -->
+<div class="page">
+  <div class="running"><span><b>Planificación aeroportuaria</b> · Aeropuerto de Zaragoza</span><span>Previsión 2050</span></div>
+  <div class="running-rule"></div>
+
+  <div class="content">
+    <section style="margin-top:0">
+      <div class="sec-head"><span class="sec-num">03</span><h2>Resultados</h2></div>
+      <figure>
+        <img src="graficos/zgz_serie.svg" alt="Pasajeros mensuales y tendencia 2004-2026" />
+        <figcaption><b>Figura 1 ·</b> Pasajeros mensuales y tendencia. Máximo en 2011, caída sostenida hasta 2019 y recuperación tras la pandemia hasta unos 59.000 pasajeros al mes, equivalentes a ≈ 708.800 al año.</figcaption>
+      </figure>
+
+      <div class="grid-2 mt-m" style="grid-template-columns: 92mm 1fr; gap:6mm">
+        <figure>
+          <img src="graficos/zgz_estacionalidad.svg" alt="Índice estacional por mes" />
+          <figcaption><b>Figura 2 ·</b> Agosto tiene un 42 % más de pasajeros que un mes medio; enero, un 29 % menos. El aeropuerto se dimensiona para el verano.</figcaption>
+        </figure>
+        <div>
+          <h3>Escenarios de demanda en 2050</h3>
+          <table>
+            <thead><tr><th>Escenario</th><th class="num">PIB</th><th class="num">Tráfico</th><th class="num">Pax 2050</th></tr></thead>
+            <tbody>
+              <tr><td>Pesimista</td><td class="num">1,0 %</td><td class="num">1,07 %</td><td class="num strong">923.583</td></tr>
+              <tr class="hl"><td>Base</td><td class="num">1,5 %</td><td class="num">1,61 %</td><td class="num">1.054.129</td></tr>
+              <tr><td>Optimista</td><td class="num">2,2 %</td><td class="num">1,67 %*</td><td class="num strong">1.069.258</td></tr>
+            </tbody>
+          </table>
+          <p class="table-note">Crecimiento anual del tráfico i = ε · g. Respecto a 2025: +30,5 %, +49,0 % y +51,1 %. El escenario base coincide con el crecimiento histórico del PIB (1,55 % anual).<br />* Véase la observación 2.</p>
+
+          <h3 class="mt-m">Operaciones y pistas en la hora punta</h3>
+          <table>
+            <thead><tr><th>Magnitud</th><th class="num">Pesim.</th><th class="num">Base</th><th class="num">Optim.</th></tr></thead>
+            <tbody>
+              <tr><td>Pasajeros en la hora punta</td><td class="num">389</td><td class="num strong">444</td><td class="num">450</td></tr>
+              <tr><td>Operaciones por hora</td><td class="num">4,6</td><td class="num strong">5,2</td><td class="num">5,3</td></tr>
+              <tr><td>Pistas necesarias</td><td class="num">0,11</td><td class="num strong">0,13</td><td class="num">0,13</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <h3 class="mt-m">De la demanda anual a la pista · escenario base</h3>
+      <div class="flow">
+        <div class="node"><div class="v">1.054.129</div><div class="l">pasajeros en 2050</div></div>
+        <div class="op"><span>× 1,424 / 12</span><span class="arr">→</span></div>
+        <div class="node"><div class="v">125.083</div><div class="l">en agosto</div></div>
+        <div class="op"><span>/ 31</span><span class="arr">→</span></div>
+        <div class="node"><div class="v">4.035</div><div class="l">por día medio</div></div>
+        <div class="op"><span>× 0,11</span><span class="arr">→</span></div>
+        <div class="node"><div class="v">444</div><div class="l">en la hora punta</div></div>
+        <div class="op"><span>/ 85 pax</span><span class="arr">→</span></div>
+        <div class="node"><div class="v">5,2</div><div class="l">operaciones/hora</div></div>
+        <div class="op"><span>/ 40 ops</span><span class="arr">→</span></div>
+        <div class="node end"><div class="v">0,13</div><div class="l">pistas</div></div>
+      </div>
+      <p class="table-note">Índice estacional de agosto: 1,424. La hora punta concentra el 11 % del tráfico diario; cada operación lleva 85 pasajeros (avión de 100 plazas al 85 %) y una pista admite 40 operaciones por hora (valor prudente del rango 40–45).</p>
+    </section>
+  </div>
+
+  <footer class="foot"><span><b>Marzal · Hernández · Martí</b> · Portfolio de ingeniería aeroespacial</span><span>Demanda del aeropuerto de Zaragoza · 2 / 3</span></footer>
+</div>
+
+<!-- ===================== Página 3 ===================== -->
+<div class="page">
+  <div class="running"><span><b>Planificación aeroportuaria</b> · Aeropuerto de Zaragoza</span><span>Previsión 2050</span></div>
+  <div class="running-rule"></div>
+
+  <div class="content">
+    <section style="margin-top:0">
+      <div class="sec-head"><span class="sec-num">04</span><h2>Observaciones sobre los datos y los cálculos</h2></div>
+      <p>Al revisar el Excel se detectaron varios puntos que conviene comprobar antes de usar los resultados. Las cifras marcadas como cálculo propio se han obtenido repitiendo sus fórmulas.</p>
+      <table class="mt-s">
+        <thead><tr><th style="width:6mm">#</th><th style="width:44mm">Observación</th><th>Detalle</th><th class="num">Impacto</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td class="strong">Trimestre parcial en la elasticidad</td><td>El primer punto de la regresión (2025 T4) solo contiene octubre y reduce la elasticidad. Sin él, ε = 1,50 y los escenarios darían 1,03, 1,24 y 1,60 M de pasajeros. R² = 0,11 (0,22 sin el punto): la elasticidad es aproximada. <em>Cálculo propio.</em></td><td class="num"><span class="tag alto">Alto</span></td></tr>
+          <tr><td>2</td><td class="strong">Escenario optimista</td><td>La fórmula multiplica la elasticidad por el 1,55 % histórico y no por el 2,2 % de la etiqueta; por eso su resultado casi iguala al base. Con el 2,2 % saldrían ≈ 1.267.000 pasajeros. <em>Cálculo propio.</em></td><td class="num"><span class="tag alto">Alto</span></td></tr>
+          <tr><td>3</td><td class="strong">Parámetros de la hora punta</td><td>El factor del 11 % no tiene fuente y todos los meses se dividen entre 31 días. Se usan 85 pasajeros por operación, frente a los 67,4 observados: con ese valor saldrían 5,8–6,7 operaciones por hora. La conclusión no cambia. <em>Cálculo propio.</em></td><td class="num"><span class="tag medio">Medio</span></td></tr>
+          <tr><td>4</td><td class="strong">Datos de 2019</td><td>La suma del Excel (344.978) se aproxima a los pasajeros internacionales publicados (345.301) y no al total (467.774). El mínimo de 2019 de la tendencia podría estar infravalorado.</td><td class="num"><span class="tag medio">Medio</span></td></tr>
+          <tr><td>5</td><td class="strong">Índice del PIB</td><td>Sin fuente, ámbito ni año base indicados; parece no estar desestacionalizado.</td><td class="num"><span class="tag medio">Medio</span></td></tr>
+          <tr><td>6</td><td class="strong">Unión de 2019 y 2022</td><td>Al eliminar la pandemia, diez medias móviles mezclan meses de ambos años. Efecto en los índices inferior a 0,01. <em>Cálculo propio.</em></td><td class="num"><span class="tag bajo">Bajo</span></td></tr>
+          <tr><td>7</td><td class="strong">Variación interanual</td><td>La columna de la primera hoja muestra algunas caídas como aumentos. No debe usarse sin corregir.</td><td class="num"><span class="tag bajo">Bajo</span></td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <div class="sec-head"><span class="sec-num">05</span><h2>Conclusiones</h2></div>
+      <div class="grid-2">
+        <div class="callout">
+          <h3>Una pista basta en cualquier escenario</h3>
+          <p>La hora punta de 2050 exige entre 4,6 y 5,3 operaciones por hora, entre el 11 % y el 13 % de la capacidad de una sola pista. Incluso corrigiendo a la vez las observaciones 1 a 3 (≈ 1,6 M de pasajeros y 67,4 pasajeros por operación) se llegaría a unas 10 operaciones por hora, una cuarta parte de la capacidad. <em>Cálculo propio.</em></p>
+        </div>
+        <div class="callout" style="border-left-color: var(--blue)">
+          <h3 style="color: var(--blue)">Después del Excel</h3>
+          <p>El tráfico de un aeropuerto regional depende más de las rutas de las aerolíneas que de la economía. En septiembre de 2025 Ryanair anunció un recorte del 45 % de su capacidad en Zaragoza, y en agosto de 2026 hubo 63.717 pasajeros (−13,8 % interanual). Como los escenarios parten de 2025, conviene revisarlos con los datos de 2026.</p>
+        </div>
+      </div>
+
+      <ul class="dots mt-m">
+        <li>La <strong>tendencia</strong> y el <strong>índice estacional</strong> separan el nivel de fondo de la demanda de su patrón anual: agosto duplica a enero.</li>
+        <li>La <strong>elasticidad</strong> convierte hipótesis de crecimiento económico en hipótesis de tráfico, y los <strong>tres escenarios</strong> acotan la demanda de 2050 entre 0,92 y 1,07 millones de pasajeros.</li>
+        <li>El <strong>reparto mensual y la hora punta</strong> traducen esa demanda anual en la carga del momento más exigente, que es la que dimensiona la infraestructura.</li>
+      </ul>
+    </section>
+
+    <section>
+      <div class="sec-head"><span class="sec-num">06</span><h2>Fuentes</h2></div>
+      <p style="font-size:7.4pt">Aena (2026), <em>El Aeropuerto de Zaragoza cierra 2025 con más de 707.000 pasajeros</em> · Aragón Digital (2020, 2025) · El Español (2026) · Wikipedia, artículos sobre el aeropuerto de Zaragoza. El informe completo, el Excel de trabajo y un simulador interactivo de escenarios están disponibles en el portfolio.</p>
+    </section>
+  </div>
+
+  <footer class="foot"><span><b>Marzal · Hernández · Martí</b> · Portfolio de ingeniería aeroespacial</span><span>Demanda del aeropuerto de Zaragoza · 3 / 3</span></footer>
+</div>
+
+</body>
+</html>
