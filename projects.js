@@ -7,7 +7,7 @@ const PROJECTS = [
     id: "misil",
     title: "Diseño y Análisis de un Misil",
     subtitle: "Diseño CAD, propulsión y aerodinámica",
-    description: "Proyecto integral: diseño en SolidWorks de un misil táctico, análisis termodinámico de su motor cohete, y simulación CFD de su aerodinámica.",
+    description: "Proyecto integral: diseño en SolidWorks de un misil táctico, análisis termodinámico de su motor turbofán (Williams F107-WR-402) y simulación CFD de su aerodinámica.",
     tags: ["SolidWorks", "CFD", "Propulsión", "MATLAB"],
     image: "img/misil_hero.png",
     status: "En progreso",
@@ -218,13 +218,10 @@ const PROJECTS = [
         id: "conclusiones",
         title: "Conclusiones",
         icon: "",
+        status: "En curso",
         software: [],
         summary: "Resumen de resultados, lecciones aprendidas y trabajo futuro.",
-        steps: [
-          { title: "Resultados principales", description: "Misil de 2.95 m, 85 kg, empuje 2500 N, Mach máx 2.8, alcance ~15 km. Estabilidad verificada (margen >1.5 calibres).", image: null },
-          { title: "Lecciones aprendidas", description: "La integración multidisciplinar reveló acoplimientos importantes entre geometría, propulsión y aerodinámica. Experiencia adquirida en SolidWorks, ANSYS Fluent y CEA.", image: null },
-          { title: "Trabajo futuro", description: "Extensiones: análisis FEA estructural, trayectoria 6-DOF en Simulink, optimización MDO, y estudio de firma radar (RCS).", image: null }
-        ]
+        steps: []
       }
     ]
   },
