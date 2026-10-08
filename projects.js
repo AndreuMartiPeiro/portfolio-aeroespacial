@@ -17,15 +17,10 @@ const PROJECTS = [
         id: "diseno",
         title: "Diseño CAD",
         icon: "",
+        status: "En curso",
         software: ["SolidWorks 2024", "KeyShot"],
         summary: "Diseño 3D completo del misil: fuselaje, aletas, ojiva y compartimentos internos.",
-        steps: [
-          { title: "Investigación y referencias", description: "Estudio de geometrías de misiles existentes (AIM-9, AIM-120). Definición de requisitos: longitud ~3 m, diámetro ~150 mm.", image: "img/misil_ref.png" },
-          { title: "Diseño de la ojiva", description: "Ojiva tangente-ogival con relación L/D de 3:1 optimizada para baja resistencia aerodinámica supersónica. Perfil basado en Haack series.", image: "img/misil_ojiva.png" },
-          { title: "Fuselaje y compartimentos", description: "Cuerpo cilíndrico en Al 7075-T6 (espesor 2 mm). Compartimentos: guiado, carga útil y motor con uniones roscadas.", image: "img/misil_fuselaje.png" },
-          { title: "Aletas estabilizadoras", description: "4 aletas cruciformes con perfil doble cuña, ángulo de flecha 45°. Verificación de estabilidad estática (CP detrás de CG).", image: "img/misil_aletas.png" },
-          { title: "Ensamblaje y renderizado", description: "Integración paramétrica de componentes. Verificación de interferencias. Render fotorrealista en KeyShot.", image: "img/misil_render.png" }
-        ]
+        steps: []
       },
       {
         id: "motor",
@@ -213,15 +208,10 @@ const PROJECTS = [
         id: "aerodinamica",
         title: "Análisis Aerodinámico",
         icon: "",
+        status: "En curso",
         software: ["ANSYS Fluent 2024", "MATLAB", "Pointwise"],
         summary: "CFD del flujo externo a diferentes Mach. Coeficientes CD, CL, CM y visualización del campo de flujo.",
-        steps: [
-          { title: "Preparación de geometría", description: "Simplificación CAD para CFD. Dominio: cono de 20×10 diámetros. Exportación STEP.", image: "img/aero_geometria.png" },
-          { title: "Generación de malla", description: "Malla estructurada en Pointwise, y+≈1, ~4.2M celdas. Estudio de independencia de malla (3 niveles).", image: "img/aero_malla.png" },
-          { title: "Configuración del solver", description: "Solver density-based, modelo SST k-ω. Simulaciones a Mach 0.8, 1.2, 2.0 y 3.0.", image: "img/aero_solver.png" },
-          { title: "Campo de flujo", description: "Contornos de presión, temperatura y Mach. Ondas de choque oblicuas y expansión visibles en régimen supersónico.", image: "img/aero_contornos.png" },
-          { title: "Coeficientes aerodinámicos", description: "CD, CL, CM vs. α (0°-15°). CD=0.42 a Mach 2.0 α=0°. Concordancia del 8% con método de Barrowman.", image: "img/aero_coeficientes.png" }
-        ]
+        steps: []
       },
       {
         id: "conclusiones",

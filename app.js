@@ -132,7 +132,8 @@
     project.sections.forEach((section, i) => {
       const tab = document.createElement('button');
       tab.className = 'section-tab' + (i === 0 ? ' active' : '');
-      tab.innerHTML = `<span class="section-tab-icon">${i + 1}</span> ${section.title}`;
+      const statusHTML = section.status ? `<span class="section-tab-status">${section.status}</span>` : '';
+      tab.innerHTML = `<span class="section-tab-icon">${i + 1}</span> ${section.title}${statusHTML}`;
       tab.addEventListener('click', () => {
         tabsEl.querySelectorAll('.section-tab').forEach(t => t.classList.remove('active'));
         tab.classList.add('active');
@@ -153,6 +154,20 @@
       ? `<div class="software-list">${section.software.map(s => `<span class="software-badge">${s}</span>`).join('')}</div>`
       : '';
 
+    const statusHTML = section.status
+      ? `<span class="status-badge"><span class="status-badge-dot"></span>${section.status}</span>`
+      : '';
+
+    const pdfHTML = section.summaryPdf ? `
+      <a href="${section.summaryPdf}" target="_blank" rel="noopener" class="download-box-btn section-pdf-btn">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+          <polyline points="7 10 12 15 17 10"/>
+          <line x1="12" y1="15" x2="12" y2="3"/>
+        </svg>
+        Resumen (PDF)
+      </a>` : '';
+
     let stepsHTML = '';
     section.steps.forEach((step, i) => {
       // Check if this is the parametric study step with substeps
@@ -163,16 +178,34 @@
       }
     });
 
+    // Apartado sin pasos publicados todavía: aviso de trabajo en curso
+    const bodyHTML = section.steps.length > 0
+      ? `<div class="timeline">${stepsHTML}</div>`
+      : `<div class="wip-panel">
+          <div class="wip-panel-icon">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/>
+              <polyline points="12 6 12 12 16 14"/>
+            </svg>
+          </div>
+          <h3 class="wip-panel-title">Apartado en desarrollo</h3>
+          <p class="wip-panel-text">Este apartado se está desarrollando actualmente. El proceso, las imágenes y los resultados se publicarán aquí en cuanto estén validados.</p>
+        </div>`;
+
     container.innerHTML = `
       <div class="section-content">
         <div class="section-content-header">
-          <h2 class="section-content-title">${section.title}</h2>
+          <div class="section-content-title-row">
+            <h2 class="section-content-title">${section.title}</h2>
+            ${statusHTML}
+          </div>
           <p class="section-content-summary">${section.summary}</p>
-          ${softwareHTML}
+          <div class="section-content-meta">
+            ${softwareHTML}
+            ${pdfHTML}
+          </div>
         </div>
-        <div class="timeline">
-          ${stepsHTML}
-        </div>
+        ${bodyHTML}
       </div>
     `;
 
