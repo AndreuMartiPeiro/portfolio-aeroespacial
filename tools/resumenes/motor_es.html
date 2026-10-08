@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Resumen — Análisis termodinámico del motor F107-WR-402</title>
+  <meta name="author" content="Andreu Martí Peiró" />
+  <link rel="stylesheet" href="resumen.css" />
+</head>
+<body>
+
+<!-- ===================== Página 1 ===================== -->
+<div class="page">
+  <header class="band">
+    <div class="band-top">
+      <span class="brand">Portfolio aeroespacial</span>
+      <span>Resumen técnico · Apartado 2 de 4</span>
+    </div>
+    <div class="band-body">
+      <p class="kicker">Proyecto · Diseño y análisis de un misil</p>
+      <h1>Análisis termodinámico del motor</h1>
+      <p class="subtitle">Turbofán Williams F107-WR-402 modelado en GasTurb&nbsp;15: punto de diseño en crucero y estudio paramétrico.</p>
+      <div class="band-meta">
+        <div><span>Autor</span>Andreu Martí Peiró</div>
+        <div><span>Herramientas</span>GasTurb 15 · MATLAB · Excel</div>
+        <div><span>Fecha</span>Octubre 2026</div>
+      </div>
+    </div>
+  </header>
+
+  <div class="kpis">
+    <div class="kpi"><div class="kpi-label">Empuje neto</div><div class="kpi-value">2,90<small>kN</small></div><div class="kpi-note">Crucero, Mach 0,72</div></div>
+    <div class="kpi"><div class="kpi-label">Consumo específico</div><div class="kpi-value">22,83</div><div class="kpi-note">g/(kN·s)</div></div>
+    <div class="kpi"><div class="kpi-label">Relación de compresión global</div><div class="kpi-value">14,2</div><div class="kpi-note">Fan 2,30 · HPC 6,06</div></div>
+    <div class="kpi"><div class="kpi-label">Temperatura de turbina</div><div class="kpi-value">1227<small>K</small></div><div class="kpi-note">Sin refrigeración</div></div>
+    <div class="kpi"><div class="kpi-label">Relación de derivación</div><div class="kpi-value">1,0</div><div class="kpi-note">Flujo mezclado</div></div>
+    <div class="kpi"><div class="kpi-label">Casos paramétricos</div><div class="kpi-value">1813</div><div class="kpi-note">convergidos en GasTurb</div></div>
+  </div>
+
+  <div class="content">
+    <section>
+      <div class="sec-head"><span class="sec-num">01</span><h2>Objetivo y alcance</h2></div>
+      <div class="grid-60">
+        <div>
+          <p class="lead">Este apartado reproduce el ciclo termodinámico del turbofán <strong>Williams F107-WR-402</strong>, el motor elegido para propulsar el misil, y evalúa cómo responden el empuje y el consumo a sus dos parámetros de diseño más influyentes.</p>
+          <p>Los datos públicos del motor se completan con estimaciones justificadas para los parámetros no publicados. Con ese modelo se calcula el punto de diseño en crucero y se recorre un mapa de 49 × 43 combinaciones de relación de compresión y temperatura.</p>
+        </div>
+        <aside class="card">
+          <h3>Ficha del motor</h3>
+          <dl class="spec">
+            <dt>Tipo</dt><dd>Turbofán de doble eje y flujo mezclado</dd>
+            <dt>Eje de baja</dt><dd>Fan + booster de 4 etapas; turbina de 2 etapas</dd>
+            <dt>Eje de alta</dt><dd>Compresor centrífugo; turbina de 1 etapa</dd>
+            <dt>Combustible</dt><dd>JP-10, 43,5 MJ/kg</dd>
+          </dl>
+        </aside>
+      </div>
+      <ul class="scope">
+        <li>Punto de diseño en crucero <span class="tag ok">Completado</span></li>
+        <li>Estudio paramétrico <span class="tag ok">Completado</span></li>
+        <li>Estudio fuera de diseño <span class="tag wip">Próximamente</span></li>
+      </ul>
+    </section>
+
+    <section>
+      <div class="sec-head"><span class="sec-num">02</span><h2>Metodología y origen de los datos</h2></div>
+      <p>Cada resultado de este resumen procede de uno de estos cuatro pasos. En cada tabla y figura se indica su origen con una línea <span class="src" style="display:inline"><b>Fuente</b></span>.</p>
+      <div class="chain c3 mt-s" style="grid-template-columns: repeat(4, 1fr)">
+        <div class="step"><span class="n">Paso 1</span><h3>Datos de entrada</h3><p>Datos publicados del motor (BPR, TET, etapas, régimen) y estimaciones propias para el resto. Tabla de la página 2.</p></div>
+        <div class="step"><span class="n">Paso 2</span><h3>Punto de diseño</h3><p>Cálculo de diseño en GasTurb 15 a Mach 0,72: rendimiento global, componentes y estaciones. Páginas 3 y 4.</p></div>
+        <div class="step"><span class="n">Paso 3</span><h3>Estudio paramétrico</h3><p>Barrido de TET y relación de compresión en GasTurb, exportado a <code>DatosExportados.xlsx</code>. Páginas 4 a 6.</p></div>
+        <div class="step"><span class="n">Paso 4</span><h3>Tratamiento</h3><p>Lectura del Excel con un script propio; las figuras y la web se generan del mismo fichero.</p></div>
+      </div>
+    </section>
+  </div>
+
+  <footer class="foot"><span><b>Andreu Martí Peiró</b> · Portfolio de ingeniería aeroespacial</span><span>Análisis del motor · 1 / 6</span></footer>
+</div>
+
+<!-- ===================== Página 2 ===================== -->
+<div class="page">
+  <div class="running"><span><b>Diseño y análisis de un misil</b> · Análisis del motor</span><span>Williams F107-WR-402</span></div>
+  <div class="running-rule"></div>
+
+  <div class="content">
+    <section style="margin-top:0">
+      <div class="sec-head"><span class="sec-num">03</span><h2>Datos de partida</h2></div>
+      <p>Parámetros introducidos en GasTurb para el cálculo de diseño. <span class="tag oficial">Oficial</span> indica un dato publicado del F107-WR-402; <span class="tag estimado">Estimado</span>, una hipótesis propia con la justificación que se indica.</p>
+      <table class="compact mt-s">
+        <thead><tr><th style="width:62mm">Parámetro</th><th class="num" style="width:24mm">Valor</th><th style="width:20mm">Origen</th><th>Justificación</th></tr></thead>
+        <tbody>
+          <tr class="group"><td colspan="4">Condición de vuelo · crucero a Mach 0,72 y baja altitud</td></tr>
+          <tr><td>Temperatura total de entrada, T₁</td><td class="num strong">291,5 K</td><td><span class="tag estimado">Estimado</span></td><td class="just">Mach 0,72 a baja altitud</td></tr>
+          <tr><td>Presión total de entrada, P₁</td><td class="num strong">116,5 kPa</td><td><span class="tag estimado">Estimado</span></td><td class="just">Mach 0,72 a baja altitud</td></tr>
+          <tr><td>Presión ambiente</td><td class="num strong">101,0 kPa</td><td><span class="tag estimado">Estimado</span></td><td class="just">Baja altitud</td></tr>
+          <tr><td>Gasto corregido de entrada, W2Rstd</td><td class="num strong">8,0 kg/s</td><td><span class="tag estimado">Estimado</span></td><td class="just">Fijado para obtener ≈ 2,9 kN de empuje con BPR = 1</td></tr>
+          <tr class="group"><td colspan="4">Ciclo</td></tr>
+          <tr><td>Relación de derivación (BPR)</td><td class="num strong">1,0</td><td><span class="tag oficial">Oficial</span></td><td class="just">—</td></tr>
+          <tr><td>Temperatura de salida de cámara (TET)</td><td class="num strong">1227 K</td><td><span class="tag oficial">Oficial</span></td><td class="just">954 °C</td></tr>
+          <tr><td>Relación de compresión del fan (interior y exterior)</td><td class="num strong">2,30</td><td><span class="tag estimado">Estimado</span></td><td class="just">Fan de 2 etapas + booster de 2 etapas</td></tr>
+          <tr><td>Relación de compresión del HPC</td><td class="num strong">6,06</td><td><span class="tag estimado">Estimado</span></td><td class="just">Ajustada para una relación global ≈ 13,8 (dato oficial)</td></tr>
+          <tr><td>Rendimiento de combustión</td><td class="num strong">0,99</td><td><span class="tag estimado">Estimado</span></td><td class="just">Valor estándar</td></tr>
+          <tr><td>Poder calorífico del combustible</td><td class="num strong">43,5 MJ/kg</td><td><span class="tag estimado">Estimado</span></td><td class="just">JP-10, combustible de alta densidad</td></tr>
+          <tr class="group"><td colspan="4">Pérdidas de presión (P<sub>salida</sub> / P<sub>entrada</sub>)</td></tr>
+          <tr><td>Toma de aire</td><td class="num strong">0,97</td><td><span class="tag estimado">Estimado</span></td><td class="just">Toma anular en vuelo subsónico</td></tr>
+          <tr><td>Cámara de combustión</td><td class="num strong">0,96</td><td><span class="tag estimado">Estimado</span></td><td class="just">Cámara anular compacta, 4&nbsp;% de pérdida</td></tr>
+          <tr><td>Conductos (entre compresores, derivación, entre turbinas, salida)</td><td class="num strong">0,99</td><td><span class="tag estimado">Estimado</span></td><td class="just">Conductos cortos de un motor compacto</td></tr>
+          <tr class="group"><td colspan="4">Turbomáquinas</td></tr>
+          <tr><td>Rendimiento isentrópico del HPC</td><td class="num strong">0,82</td><td><span class="tag estimado">Estimado</span></td><td class="just">Compresor centrífugo pequeño</td></tr>
+          <tr><td>Rendimiento isentrópico HPT / LPT</td><td class="num strong">0,87 / 0,89</td><td><span class="tag estimado">Estimado</span></td><td class="just">Turbinas axiales sin refrigeración de 1 y 2 etapas</td></tr>
+          <tr><td>Etapas de turbina HP / LP</td><td class="num strong">1 / 2</td><td><span class="tag oficial">Oficial</span></td><td class="just">—</td></tr>
+          <tr><td>Aire de refrigeración de turbina</td><td class="num strong">0&nbsp;%</td><td><span class="tag oficial">Oficial</span></td><td class="just">Turbina sin refrigeración</td></tr>
+          <tr><td>Régimen nominal del eje de baja</td><td class="num strong">35 500 rpm</td><td><span class="tag oficial">Oficial</span></td><td class="just">—</td></tr>
+          <tr><td>Régimen nominal del eje de alta</td><td class="num strong">60 000 rpm</td><td><span class="tag estimado">Estimado</span></td><td class="just">Régimen típico de un centrífugo pequeño</td></tr>
+          <tr><td>Rendimiento mecánico de los ejes HP y LP</td><td class="num strong">0,995</td><td><span class="tag estimado">Estimado</span></td><td class="just">Valor estándar en motores pequeños</td></tr>
+          <tr class="group"><td colspan="4">Sistema de aire y tobera</td></tr>
+          <tr><td>Sangrado exterior / extracción de potencia</td><td class="num strong">0 kg/s · 0,5 kW</td><td><span class="tag estimado">Estimado</span></td><td class="just">Sin sangrado; solo el alternador de la caja de accesorios</td></tr>
+          <tr><td>Fugas HP a derivación / a salida de LPT</td><td class="num strong">0,5&nbsp;% / 0,3&nbsp;%</td><td><span class="tag estimado">Estimado</span></td><td class="just">Fugas mínimas</td></tr>
+          <tr><td>Coeficiente de empuje de la tobera</td><td class="num strong">0,985</td><td><span class="tag estimado">Estimado</span></td><td class="just">Tobera convergente estándar</td></tr>
+        </tbody>
+      </table>
+      <p class="src"><b>Fuente</b> Tabla de entrada de GasTurb publicada en el apartado «Análisis del Motor» del portfolio (paso 1, «Datos de partida»), donde figuran los 62 parámetros del modelo.</p>
+    </section>
+  </div>
+
+  <footer class="foot"><span><b>Andreu Martí Peiró</b> · Portfolio de ingeniería aeroespacial</span><span>Análisis del motor · 2 / 6</span></footer>
+</div>
+
+<!-- ===================== Página 3 ===================== -->
+<div class="page">
+  <div class="running"><span><b>Diseño y análisis de un misil</b> · Análisis del motor</span><span>Williams F107-WR-402</span></div>
+  <div class="running-rule"></div>
+
+  <div class="content">
+    <section style="margin-top:0">
+      <div class="sec-head"><span class="sec-num">04</span><h2>Punto de diseño: recorrido del flujo</h2></div>
+      <p>En la condición de crucero el modelo entrega <strong>2,90 kN de empuje neto</strong> con un consumo específico de <strong>22,83 g/(kN·s)</strong>. La figura 1 sigue el flujo primario: la compresión eleva la presión total hasta 1608 kPa y la cámara lleva el gas a 1227 K; las turbinas extraen la energía que mueve el compresor de alta y el fan, y en el mezclador el flujo caliente se une al de derivación antes de expandirse en la tobera.</p>
+
+      <figure class="mt-s">
+        <img src="graficos/motor_estaciones_es.svg" alt="Temperatura y presión total por estación" />
+        <figcaption><b>Figura 1 ·</b> Temperatura y presión total a lo largo del flujo primario (numeración de estaciones de GasTurb).</figcaption>
+      </figure>
+
+      <h3 class="sub">Propiedades por estación</h3>
+      <table class="compact">
+        <thead><tr><th>Estación</th><th>Posición</th><th class="num">Gasto [kg/s]</th><th class="num">T total [K]</th><th class="num">P total [kPa]</th><th class="num">Velocidad [m/s]</th><th class="num">Mach</th><th class="num">Área [m²]</th></tr></thead>
+        <tbody>
+          <tr><td class="strong">2</td><td>Entrada del fan</td><td class="num">8,871</td><td class="num">291,50</td><td class="num">113,00</td><td class="num">167,0</td><td class="num">0,500</td><td class="num">0,0444</td></tr>
+          <tr><td class="strong">21</td><td>Salida del fan, núcleo</td><td class="num">4,435</td><td class="num">382,28</td><td class="num">267,95</td><td class="num">191,1</td><td class="num">0,500</td><td class="num">0,0107</td></tr>
+          <tr><td class="strong">13</td><td>Salida del fan, derivación</td><td class="num">4,435</td><td class="num">382,28</td><td class="num">251,87</td><td class="num">154,2</td><td class="num">0,400</td><td class="num">0,0136</td></tr>
+          <tr><td class="strong">3</td><td>Salida del HPC</td><td class="num">4,435</td><td class="num">684,54</td><td class="num">1607,54</td><td class="num">103,3</td><td class="num">0,200</td><td class="num">0,0054</td></tr>
+          <tr><td class="strong">4</td><td>Salida de cámara</td><td class="num">4,466</td><td class="num">1227,00</td><td class="num">1543,24</td><td class="num">202,6</td><td class="num">0,300</td><td class="num">0,0053</td></tr>
+          <tr><td class="strong">44</td><td>Salida de la HPT</td><td class="num">4,466</td><td class="num">962,68</td><td class="num">477,08</td><td class="num">268,6</td><td class="num">0,450</td><td class="num">0,0106</td></tr>
+          <tr><td class="strong">5</td><td>Salida de la LPT</td><td class="num">4,466</td><td class="num">802,94</td><td class="num">207,67</td><td class="num">272,8</td><td class="num">0,500</td><td class="num">0,0205</td></tr>
+          <tr><td class="strong">6</td><td>Mezclador, entrada núcleo</td><td class="num">4,479</td><td class="num">802,61</td><td class="num">205,60</td><td class="num">120,3</td><td class="num">0,217</td><td class="num">0,0427</td></tr>
+          <tr><td class="strong">16</td><td>Mezclador, entrada derivación</td><td class="num">4,458</td><td class="num">383,82</td><td class="num">249,35</td><td class="num">109,0</td><td class="num">0,280</td><td class="num">0,0188</td></tr>
+          <tr><td class="strong">64</td><td>Salida del mezclador</td><td class="num">8,937</td><td class="num">600,51</td><td class="num">215,38</td><td class="num">193,8</td><td class="num">0,404</td><td class="num">0,0400</td></tr>
+          <tr><td class="strong">8</td><td>Garganta de la tobera</td><td class="num">8,937</td><td class="num">600,51</td><td class="num">213,23</td><td class="num">447,6</td><td class="num">1,000</td><td class="num">0,0256</td></tr>
+        </tbody>
+      </table>
+      <p class="src"><b>Fuente</b> Salida del cálculo de punto de diseño de GasTurb 15 («Station Properties»), publicada en el paso 2 del apartado del portfolio. La figura 1 representa las estaciones del flujo primario de esta tabla.</p>
+    </section>
+  </div>
+
+  <footer class="foot"><span><b>Andreu Martí Peiró</b> · Portfolio de ingeniería aeroespacial</span><span>Análisis del motor · 3 / 6</span></footer>
+</div>
+
+<!-- ===================== Página 4 ===================== -->
+<div class="page">
+  <div class="running"><span><b>Diseño y análisis de un misil</b> · Análisis del motor</span><span>Williams F107-WR-402</span></div>
+  <div class="running-rule"></div>
+
+  <div class="content">
+    <section style="margin-top:0">
+      <div class="sec-head"><span class="sec-num">05</span><h2>Punto de diseño: rendimiento y comprobaciones</h2></div>
+      <p>Las magnitudes globales que entrega GasTurb pueden reconstruirse a partir de la tabla de estaciones. La última columna muestra el cálculo, lo que permite comprobar que los resultados son coherentes entre sí.</p>
+      <table class="mt-s">
+        <thead><tr><th>Magnitud</th><th class="num">Resultado</th><th>Cómo se obtiene</th></tr></thead>
+        <tbody>
+          <tr><td>Empuje neto, F<sub>N</sub></td><td class="num strong">2,90 kN</td><td class="calc">Salida directa de GasTurb</td></tr>
+          <tr><td>Gasto de combustible, W<sub>F</sub></td><td class="num strong">0,0663 kg/s</td><td class="calc">Salida directa de GasTurb</td></tr>
+          <tr><td>Consumo específico (TSFC)</td><td class="num strong">22,83 g/(kN·s)</td><td class="calc"><i>W<sub>F</sub> / F<sub>N</sub></i> = 66,28 g/s ÷ 2,90 kN</td></tr>
+          <tr><td>Gasto másico real en la entrada</td><td class="num strong">8,87 kg/s</td><td class="calc"><i>W2Rstd · δ / √θ</i> = 8,0 · (113,0 / 101,325) / √(291,5 / 288,15)</td></tr>
+          <tr><td>Relación de compresión global</td><td class="num strong">14,23</td><td class="calc"><i>P₃ / P₂</i> = 1607,5 / 113,0</td></tr>
+          <tr><td>Recuperación de presión en cámara</td><td class="num strong">0,96</td><td class="calc"><i>P₄ / P₃</i> = 1543,2 / 1607,5</td></tr>
+          <tr><td>Relación de expansión de la HPT</td><td class="num strong">3,24</td><td class="calc"><i>P₄ / P₄₄</i> = 1543,2 / 477,1</td></tr>
+          <tr><td>Relación de expansión de la LPT</td><td class="num strong">2,27</td><td class="calc"><i>0,99 · P₄₄ / P₅</i> = 0,99 · 477,1 / 207,7 (pérdida del conducto entre turbinas)</td></tr>
+          <tr><td>Relación de presiones de la tobera</td><td class="num strong">2,11</td><td class="calc"><i>P₈ / P<sub>amb</sub></i> = 213,2 / 101,0 &gt; 1,85 (crítica): tobera bloqueada</td></tr>
+          <tr><td>Área de garganta de la tobera, A₈</td><td class="num strong">0,0262 m²</td><td class="calc">Salida directa de GasTurb (estación 8)</td></tr>
+          <tr><td>Rendimiento del núcleo / propulsivo</td><td class="num strong">0,375 / 0,486</td><td class="calc">Salida directa de GasTurb</td></tr>
+        </tbody>
+      </table>
+      <p class="src"><b>Fuente</b> Salida de GasTurb 15 («Overall Performance» y «Station Properties»); cálculos de comprobación propios a partir de esos valores.</p>
+
+      <div class="grid-2 mt-m">
+        <div>
+          <h3>Rendimiento de los componentes</h3>
+          <table class="compact">
+            <thead><tr><th>Componente</th><th class="num"><span class="nt">η</span> isentrópico</th><th class="num"><span class="nt">η</span> politrópico</th><th class="num">P/P</th></tr></thead>
+            <tbody>
+              <tr><td>Fan / LPC</td><td class="num">0,860</td><td class="num">0,875</td><td class="num">2,30</td></tr>
+              <tr><td>Compresor de alta</td><td class="num">0,820</td><td class="num">0,858</td><td class="num">6,06</td></tr>
+              <tr><td>Cámara de combustión</td><td class="num">0,990</td><td class="num">—</td><td class="num">0,96</td></tr>
+              <tr><td>Turbina de alta</td><td class="num">0,870</td><td class="num">0,853</td><td class="num">3,24</td></tr>
+              <tr><td>Turbina de baja</td><td class="num">0,890</td><td class="num">0,879</td><td class="num">2,27</td></tr>
+              <tr><td>Mezclador</td><td class="num">0,970</td><td class="num">—</td><td class="num">—</td></tr>
+            </tbody>
+          </table>
+          <p class="src"><b>Fuente</b> GasTurb 15, «Component Efficiencies».</p>
+        </div>
+        <div class="callout">
+          <h3>Lectura del resultado</h3>
+          <ul class="dots">
+            <li>La tobera trabaja <strong>bloqueada</strong>: el chorro sale subexpandido, algo habitual en toberas convergentes.</li>
+            <li>Con BPR = 1 el chorro sale rápido y el rendimiento propulsivo (48,6&nbsp;%) es moderado: es el precio de un motor compacto, apto para el fuselaje.</li>
+            <li>La turbina de alta funciona <strong>sin refrigeración</strong>, lo que limita la TET a 1227 K a cambio de un motor más simple.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="sec-head"><span class="sec-num">06</span><h2>Estudio paramétrico</h2></div>
+      <p>Partiendo del modelo de diseño, GasTurb recalcula el ciclo variando a la vez la temperatura de salida de cámara y la relación de compresión del HPC. El resto de parámetros se mantiene en los valores de la página 2.</p>
+      <table class="compact mt-s">
+        <thead><tr><th>Elemento</th><th>Valor</th></tr></thead>
+        <tbody>
+          <tr><td>Variable 1 · temperatura de salida de cámara (TET)</td><td class="strong">1062,5 – 1500 K · 43 valores (paso ≈ 10,4 K)</td></tr>
+          <tr><td>Variable 2 · relación de compresión del HPC</td><td class="strong">4 – 10 · 49 valores (paso 0,125)</td></tr>
+          <tr><td>Salidas</td><td class="strong">Consumo específico (TSFC) y empuje neto</td></tr>
+          <tr><td>Casos</td><td class="strong">2107 planteados · 1813 convergidos · 294 sin solución (PR alta con TET baja)</td></tr>
+          <tr><td>Comprobación con el punto de diseño</td><td class="strong">PR = 6, TET = 1229 K → 22,85 g/(kN·s) y 2,92 kN, frente a 22,83 y 2,90 en diseño</td></tr>
+        </tbody>
+      </table>
+      <p class="src"><b>Fuente</b> <code>data/DatosExportados.xlsx</code>, exportación directa de GasTurb (un bloque por relación de compresión con «Sp. Fuel Consumption» y «Net Thrust»). Disponible para descarga en el portfolio.</p>
+
+    </section>
+  </div>
+
+  <footer class="foot"><span><b>Andreu Martí Peiró</b> · Portfolio de ingeniería aeroespacial</span><span>Análisis del motor · 4 / 6</span></footer>
+</div>
+
+<!-- ===================== Página 5 ===================== -->
+<div class="page">
+  <div class="running"><span><b>Diseño y análisis de un misil</b> · Análisis del motor</span><span>Williams F107-WR-402</span></div>
+  <div class="running-rule"></div>
+
+  <div class="content">
+    <section style="margin-top:0">
+      <div class="grid-2" style="gap:6mm">
+        <figure>
+          <img src="graficos/motor_mapa_tsfc_es.svg" alt="Mapa de consumo específico" />
+          <figcaption><b>Figura 2 ·</b> Consumo específico. Más claro, menor consumo. La zona rayada no tiene solución convergida.</figcaption>
+        </figure>
+        <figure>
+          <img src="graficos/motor_mapa_empuje_es.svg" alt="Mapa de empuje neto" />
+          <figcaption><b>Figura 3 ·</b> Empuje neto. Más oscuro, mayor empuje.</figcaption>
+        </figure>
+      </div>
+
+      <h3 class="sub">Extracto de los datos exportados · TSFC [g/(kN·s)] / empuje neto [kN]</h3>
+      <table class="compact">
+        <thead><tr><th>PR HPC</th><th class="num">1104 K</th><th class="num">1188 K</th><th class="num">1271 K</th><th class="num">1333 K</th><th class="num">1417 K</th><th class="num">1500 K</th></tr></thead>
+        <tbody>
+          <tr><td class="strong">4</td><td class="num">25,25 / 2,36</td><td class="num">24,60 / 2,86</td><td class="num">24,69 / 3,30</td><td class="num">25,08 / 3,59</td><td class="num">25,93 / 3,93</td><td class="num">27,01 / 4,21</td></tr>
+          <tr><td class="strong">6</td><td class="num">24,99 / 2,02</td><td class="num">23,16 / 2,65</td><td class="num">22,79 / 3,18</td><td class="num">23,07 / 3,51</td><td class="num">24,00 / 3,86</td><td class="num">25,18 / 4,15</td></tr>
+          <tr><td class="strong">8</td><td class="na">sin solución</td><td class="num">23,16 / 2,34</td><td class="num">21,99 / 2,97</td><td class="num">21,99 / 3,35</td><td class="num">22,82 / 3,74</td><td class="num">24,01 / 4,05</td></tr>
+          <tr class="hl"><td>10</td><td class="na">sin solución</td><td class="num">24,29 / 1,99</td><td class="num">21,84 / 2,72</td><td class="num">21,41 / 3,17</td><td class="num">21,96 / 3,61</td><td class="num">23,12 / 3,94</td></tr>
+        </tbody>
+      </table>
+      <p class="src"><b>Fuente</b> <code>data/DatosExportados.xlsx</code>; valores sin redondeo intermedio. La fila resaltada contiene el mínimo de consumo de todo el dominio (21,41 g/(kN·s) a 1333 K).</p>
+      <figure class="mt-m">
+        <img src="graficos/motor_carpet_es.svg" alt="Carpet plot empuje frente a consumo" />
+        <figcaption><b>Figura 4 ·</b> <em>Carpet plot</em> empuje–consumo construido con los mismos 1813 casos. Cada cruce de líneas es un diseño posible; la estrella marca el F107-WR-402.</figcaption>
+      </figure>
+    </section>
+  </div>
+
+  <footer class="foot"><span><b>Andreu Martí Peiró</b> · Portfolio de ingeniería aeroespacial</span><span>Análisis del motor · 5 / 6</span></footer>
+</div>
+
+<!-- ===================== Página 6 ===================== -->
+<div class="page">
+  <div class="running"><span><b>Diseño y análisis de un misil</b> · Análisis del motor</span><span>Williams F107-WR-402</span></div>
+  <div class="running-rule"></div>
+
+  <div class="content">
+    <section style="margin-top:0">
+      <div class="sec-head"><span class="sec-num">07</span><h2>Lectura del estudio paramétrico</h2></div>
+      <div class="grid-2">
+        <div class="finding">
+          <span class="n">1</span>
+          <h3>La temperatura gobierna el empuje</h3>
+          <p>Con PR = 6, subir la TET de 1104 a 1500 K duplica el empuje (de 2,02 a 4,15 kN). A cambio, por encima de la temperatura óptima el consumo crece rápido: con PR = 4 llega a 27,0 g/(kN·s) a 1500 K.</p>
+        </div>
+        <div class="finding">
+          <span class="n">2</span>
+          <h3>Cada compresión tiene su temperatura óptima</h3>
+          <p>La TET de mínimo consumo sube con la relación de compresión: 1219 K con PR = 4, 1260 K con PR = 6 y 1333 K con PR = 10. Por debajo de ella sobra compresor; por encima, el chorro sale demasiado rápido.</p>
+        </div>
+        <div class="finding">
+          <span class="n">3</span>
+          <h3>A 1229 K, más compresión apenas compensa</h3>
+          <p>A la temperatura de diseño, pasar de PR = 6 a PR = 8 solo reduce el consumo un 2&nbsp;% (22,85 → 22,36) y el empuje cae un 9&nbsp;% (2,92 → 2,67 kN). Con PR = 10 el consumo vuelve a subir.</p>
+        </div>
+        <div class="finding">
+          <span class="n">4</span>
+          <h3>El diseño es un óptimo práctico</h3>
+          <p>El mínimo global, 21,41 g/(kN·s), es un 6,2&nbsp;% menor que el de diseño, pero exige 106 K más de TET (turbina refrigerada) y una relación de compresión del HPC un 65&nbsp;% mayor.</p>
+        </div>
+      </div>
+      <p class="src"><b>Fuente</b> Cifras leídas de <code>data/DatosExportados.xlsx</code> (figuras 2–4 y extracto de la página 5).</p>
+    </section>
+
+    <section>
+      <div class="sec-head"><span class="sec-num">08</span><h2>Conclusiones y siguientes pasos</h2></div>
+      <div class="grid-2">
+        <p>El modelo es coherente con los datos públicos del F107-WR-402 y consigo mismo: <strong>2,90 kN con 22,83 g/(kN·s)</strong> en crucero, y el estudio paramétrico reproduce ese punto con menos de un 1&nbsp;% de diferencia. El diseño real cede un 6&nbsp;% de consumo a cambio de compacidad y de una turbina sin refrigeración.</p>
+        <p><strong>Siguientes pasos:</strong> estudio fuera de diseño (Mach, altitud y régimen de potencia) e integración con el análisis aerodinámico, para comprobar que el empuje disponible iguala la resistencia del misil en crucero.</p>
+      </div>
+    </section>
+
+    <section>
+      <div class="sec-head"><span class="sec-num">09</span><h2>Archivos y fuentes</h2></div>
+      <table class="compact">
+        <tbody>
+          <tr><td style="width:58mm"><code>data/DatosExportados.xlsx</code></td><td>Exportación de GasTurb del estudio paramétrico (1813 casos). Base de las figuras 2–4 y de la web.</td></tr>
+          <tr><td>Tablas de GasTurb del portfolio</td><td>Datos de entrada, rendimiento global, componentes y estaciones del punto de diseño (apartado «Análisis del Motor»).</td></tr>
+          <tr><td>Datos públicos del F107-WR-402</td><td>Valores marcados como «Oficial»: BPR, TET, etapas de turbina, ausencia de refrigeración, régimen del eje de baja y relación de compresión global.</td></tr>
+          <tr><td>GasTurb 15</td><td>Programa de simulación de turbinas de gas empleado en el diseño y en el estudio paramétrico.</td></tr>
+        </tbody>
+      </table>
+    </section>
+  </div>
+
+  <footer class="foot"><span><b>Andreu Martí Peiró</b> · Portfolio de ingeniería aeroespacial</span><span>Análisis del motor · 6 / 6</span></footer>
+</div>
+
+</body>
+</html>

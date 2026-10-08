@@ -29,6 +29,7 @@ const PROJECTS = [
         software: ["GasTurb 15", "MATLAB R2024b", "Excel"],
         summary: "Análisis termodinámico del turbofán Williams F107-WR-402. Estudio de punto de diseño, paramétrico y off-design.",
         summaryPdf: "data/resumenes/Resumen_Analisis_Motor_F107.pdf",
+        summaryPdfEn: "data/resumenes/Summary_Engine_Analysis_F107.pdf",
         steps: [
           {
             title: "Datos de Partida",

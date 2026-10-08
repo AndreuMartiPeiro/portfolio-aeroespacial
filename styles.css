@@ -663,6 +663,16 @@ img { max-width: 100%; height: auto; display: block; }
   font-size: 0.9rem;
 }
 
+.section-pdf-btns { display: flex; flex-wrap: wrap; gap: var(--space-sm); }
+
+.section-pdf-btn.ghost {
+  background: transparent;
+  color: var(--text-primary);
+  border: 1px solid var(--border-glow);
+}
+
+.section-pdf-btn.ghost:hover { color: var(--text-primary); border-color: var(--accent-cyan); }
+
 /* --- Timeline --- */
 .timeline {
   position: relative;

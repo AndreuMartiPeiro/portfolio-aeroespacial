@@ -158,15 +158,18 @@
       ? `<span class="status-badge"><span class="status-badge-dot"></span>${section.status}</span>`
       : '';
 
-    const pdfHTML = section.summaryPdf ? `
-      <a href="${section.summaryPdf}" target="_blank" rel="noopener" class="download-box-btn section-pdf-btn">
+    const pdfLink = (href, label, extra) => `
+      <a href="${href}" target="_blank" rel="noopener" class="download-box-btn section-pdf-btn${extra}">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
           <polyline points="7 10 12 15 17 10"/>
           <line x1="12" y1="15" x2="12" y2="3"/>
         </svg>
-        Resumen (PDF)
-      </a>` : '';
+        ${label}
+      </a>`;
+    const pdfHTML = section.summaryPdf
+      ? `<div class="section-pdf-btns">${pdfLink(section.summaryPdf, 'Resumen (PDF)', '')}${section.summaryPdfEn ? pdfLink(section.summaryPdfEn, 'Summary (EN)', ' ghost') : ''}</div>`
+      : '';
 
     let stepsHTML = '';
     section.steps.forEach((step, i) => {
