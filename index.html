@@ -3,102 +3,138 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Portfolio Aeroespacial — Proyectos de Ingeniería</title>
+  <title>Andreu Martí Peiró — Portfolio de Ingeniería Aeroespacial</title>
   <meta name="description" content="Portfolio de proyectos de ingeniería aeroespacial: diseño CAD, propulsión, aerodinámica y más. Proyectos extracurriculares de un estudiante de ingeniería aeroespacial." />
   <meta name="author" content="Andreu Martí Peiró" />
-  <meta property="og:title" content="Portfolio Aeroespacial" />
+  <meta name="theme-color" content="#0d0d0e" />
+  <meta property="og:title" content="Portfolio Aeroespacial — Andreu Martí Peiró" />
   <meta property="og:description" content="Proyectos de ingeniería aeroespacial: diseño, propulsión y aerodinámica." />
   <meta property="og:type" content="website" />
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚀</text></svg>" />
-  <link rel="stylesheet" href="styles.css?v=20261008" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%230d0d0e'/><rect x='9' y='9' width='14' height='14' rx='7' fill='%23e8552b'/></svg>" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <script>document.documentElement.classList.add('js');</script>
+  <link rel="stylesheet" href="styles.css?v=20261030" />
 </head>
 <body>
 
-  <!-- Stars Background -->
-  <canvas id="stars-canvas"></canvas>
-
-  <!-- App Container -->
   <div id="app">
 
     <!-- Navbar -->
-    <nav class="navbar" id="navbar">
+    <header class="navbar" id="navbar">
       <div class="container">
-        <a href="#/" class="navbar-brand" id="navbar-brand">Aerospace Portfolio</a>
-        <button class="navbar-back" id="navbar-back">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="m15 18-6-6 6-6"/>
+        <a href="#/" class="navbar-brand" id="navbar-brand" aria-label="Inicio">
+          <span class="brand-mark">AM</span>
+          <span>Andreu Martí Peiró <span class="brand-role">— Ingeniería Aeroespacial</span></span>
+        </a>
+        <button class="navbar-back" id="navbar-back" type="button">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M19 12H5"/><path d="m12 19-7-7 7-7"/>
           </svg>
           Volver a proyectos
         </button>
+        <nav class="navbar-links" aria-label="Secciones">
+          <!-- Para un apartado nuevo: añade aquí <a href="#id-del-apartado" class="link-underline">Nombre</a> -->
+          <a href="#proyectos" class="link-underline">Proyectos</a>
+        </nav>
       </div>
-    </nav>
+      <div class="scroll-progress" id="scroll-progress"></div>
+    </header>
 
     <!-- ========== Landing View ========== -->
-    <div id="landing-view">
+    <main id="landing-view" class="view">
 
       <!-- Hero -->
-      <section class="hero">
+      <section class="hero" id="inicio">
         <div class="container">
-          <div class="hero-badge">
-            <span class="dot"></span>
-            Ingeniería Aeroespacial
+          <div class="hero-meta">
+            <span class="eyebrow"><span class="dot"></span>Ingeniería Aeroespacial</span>
+            <span class="eyebrow">Portfolio — 2026</span>
           </div>
-          <h1>
-            Proyectos de<br />
-            <span class="gradient-text">Ingeniería Aeroespacial</span>
+          <h1 class="hero-title">
+            <span class="line"><span>Proyectos de</span></span>
+            <span class="line"><span>ingeniería <em>aeroespacial</em></span></span>
           </h1>
-          <p class="hero-subtitle">
-            Exploración práctica de diseño, propulsión y aerodinámica.
-            Proyectos realizados de forma autodidacta para profundizar
-            en las disciplinas clave del sector aeroespacial.
-          </p>
-          <div class="hero-stats">
-            <div class="hero-stat">
-              <div class="hero-stat-value" id="stat-projects">1</div>
-              <div class="hero-stat-label">Proyectos</div>
-            </div>
-            <div class="hero-stat">
-              <div class="hero-stat-value" id="stat-sections">4</div>
-              <div class="hero-stat-label">Análisis</div>
-            </div>
-            <div class="hero-stat">
-              <div class="hero-stat-value">2026</div>
-              <div class="hero-stat-label">Año</div>
+          <div class="hero-bottom">
+            <p class="hero-subtitle">
+              Exploración práctica de diseño, propulsión y aerodinámica.
+              Proyectos realizados de forma autodidacta para profundizar
+              en las disciplinas clave del sector aeroespacial.
+            </p>
+            <div class="hero-stats">
+              <div class="hero-stat">
+                <div class="hero-stat-value" id="stat-projects">1</div>
+                <div class="hero-stat-label">Proyectos</div>
+              </div>
+              <div class="hero-stat">
+                <div class="hero-stat-value" id="stat-sections">4</div>
+                <div class="hero-stat-label">Análisis</div>
+              </div>
+              <div class="hero-stat">
+                <div class="hero-stat-value">2026</div>
+                <div class="hero-stat-label">Año</div>
+              </div>
             </div>
           </div>
         </div>
+        <a href="#proyectos" class="hero-scroll">Scroll<span class="hero-scroll-line"></span></a>
       </section>
 
-      <!-- Projects Grid -->
-      <section class="projects-section">
+      <!-- Projects -->
+      <section class="section" id="proyectos">
         <div class="container">
-          <div class="section-header">
-            <div class="section-label">Selecciona un proyecto</div>
-            <h2 class="section-title">Mis Proyectos</h2>
-          </div>
+          <header class="section-head reveal">
+            <span class="section-index">01</span>
+            <div>
+              <span class="eyebrow">Selecciona un proyecto</span>
+              <h2 class="section-title">Mis proyectos</h2>
+            </div>
+            <p class="section-intro">Cada proyecto documenta el proceso completo: datos de partida, herramientas, resultados y conclusiones.</p>
+          </header>
           <div class="projects-grid" id="projects-grid">
             <!-- Cards rendered by app.js -->
           </div>
         </div>
       </section>
 
-      <!-- Footer -->
+      <!--
+        Plantilla para un apartado nuevo (ver DESIGN.md):
+        <section class="section" id="sobre-mi">
+          <div class="container">
+            <header class="section-head reveal">
+              <span class="section-index">02</span>
+              <div>
+                <span class="eyebrow">Etiqueta corta</span>
+                <h2 class="section-title">Título del apartado</h2>
+              </div>
+              <p class="section-intro">Una o dos frases de introducción.</p>
+            </header>
+            … contenido con .reveal …
+          </div>
+        </section>
+      -->
+
       <footer class="footer">
-        <div class="container">
-          <p class="footer-text">
-            Diseñado por <span class="highlight">Andreu Martí Peiró</span>, graduado en Ingeniería Aeroespacial
-          </p>
+        <div class="container footer-inner">
+          <div>
+            <p class="footer-name">Andreu Martí Peiró</p>
+            <p class="footer-text">Diseñado por <span class="highlight">Andreu Martí Peiró</span>, graduado en Ingeniería Aeroespacial</p>
+          </div>
+          <div class="footer-aside">
+            <span>© 2026</span>
+            <button type="button" class="footer-top link-underline" data-scroll-top>Volver arriba ↑</button>
+          </div>
         </div>
       </footer>
-    </div>
+    </main>
 
     <!-- ========== Project View ========== -->
-    <div id="project-view" class="project-view">
+    <main id="project-view" class="project-view view">
       <div class="container">
         <div class="project-hero" id="project-hero">
           <!-- Rendered by app.js -->
         </div>
-        <div class="section-tabs" id="section-tabs">
+        <div class="section-tabs" id="section-tabs" role="tablist">
           <!-- Rendered by app.js -->
         </div>
         <div id="section-content">
@@ -106,22 +142,27 @@
         </div>
       </div>
       <footer class="footer">
-        <div class="container">
-          <p class="footer-text">
-            Diseñado por <span class="highlight">Andreu Martí Peiró</span>, graduado en Ingeniería Aeroespacial
-          </p>
+        <div class="container footer-inner">
+          <div>
+            <p class="footer-name">Andreu Martí Peiró</p>
+            <p class="footer-text">Diseñado por <span class="highlight">Andreu Martí Peiró</span>, graduado en Ingeniería Aeroespacial</p>
+          </div>
+          <div class="footer-aside">
+            <span>© 2026</span>
+            <button type="button" class="footer-top link-underline" data-scroll-top>Volver arriba ↑</button>
+          </div>
         </div>
       </footer>
-    </div>
+    </main>
 
   </div>
 
   <!-- Scripts -->
   <script src="https://cdn.plot.ly/plotly-2.35.0.min.js" charset="utf-8"></script>
-  <script src="parametric-data.js?v=20261008"></script>
-  <script src="projects.js?v=20261008"></script>
-  <script src="zaragoza-data.js?v=20261008"></script>
-  <script src="zaragoza.js?v=20261008"></script>
-  <script src="app.js?v=20261008"></script>
+  <script src="parametric-data.js?v=20261030"></script>
+  <script src="projects.js?v=20261030"></script>
+  <script src="zaragoza-data.js?v=20261030"></script>
+  <script src="zaragoza.js?v=20261030"></script>
+  <script src="app.js?v=20261030"></script>
 </body>
 </html>

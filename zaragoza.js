@@ -11,8 +11,9 @@
   const MESES = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
   const MESES_L = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
   const C = {
-    gold: '#b0945a', cyan: '#7a98ba', coral: '#b06c58', text: '#e5e7eb',
-    muted: '#9ca3af', faint: '#4b5563', grid: 'rgba(229,231,235,0.07)', bg: '#111827'
+    // Mismos valores que los tokens de styles.css (gold = acento, cyan = terciario)
+    gold: '#e8552b', cyan: '#8aa1b9', coral: '#c4c4c8', text: '#ededec',
+    muted: '#8e8e93', faint: '#45454a', grid: 'rgba(255,255,255,0.07)', bg: '#0d0d0e'
   };
   const PAX_2025 = 707493;
   const EPS = 1.0718369235500866;
@@ -34,9 +35,9 @@
   function layout(extra) {
     return merge({
       paper_bgcolor: 'rgba(0,0,0,0)', plot_bgcolor: 'rgba(0,0,0,0)',
-      font: { family: 'Source Sans 3, sans-serif', color: C.muted, size: 12 },
+      font: { family: 'Inter, sans-serif', color: C.muted, size: 12 },
       margin: { l: 60, r: 20, t: 20, b: 45 },
-      hoverlabel: { bgcolor: '#1f2937', bordercolor: C.gold, font: { color: C.text, family: 'Source Sans 3, sans-serif' } },
+      hoverlabel: { bgcolor: '#19191b', bordercolor: C.gold, font: { color: C.text, family: 'Inter, sans-serif' } },
       legend: { orientation: 'h', y: 1.12, x: 0, font: { color: C.text } },
       xaxis: { gridcolor: C.grid, zeroline: false, linecolor: C.grid },
       yaxis: { gridcolor: C.grid, zeroline: false, linecolor: C.grid, separatethousands: true },
@@ -263,12 +264,12 @@
       // mini gráfico con la ventana resaltada
       const x = S.map(r => iso(r[0], r[1]));
       plot(root.querySelector('#zp-c1'), [
-        { x, y: S.map(r => r[4]), mode: 'lines', name: 'Pasajeros', line: { color: 'rgba(122,152,186,0.55)', width: 1.2 }, hovertemplate: '%{x|%b %Y}: %{y:,.0f}<extra></extra>' },
+        { x, y: S.map(r => r[4]), mode: 'lines', name: 'Pasajeros', line: { color: 'rgba(138,161,185,0.55)', width: 1.2 }, hovertemplate: '%{x|%b %Y}: %{y:,.0f}<extra></extra>' },
         { x, y: S.map(r => r[5]), mode: 'lines', name: 'Media móvil', line: { color: C.gold, width: 2.2 }, connectgaps: false, hovertemplate: '%{x|%b %Y}: %{y:,.0f}<extra>MM</extra>' },
         { x: [iso(S[i][0], S[i][1])], y: [mm], mode: 'markers', name: 'Mes elegido', marker: { size: 12, color: C.coral, line: { color: '#fff', width: 2 } }, hoverinfo: 'skip' }
       ], {
         margin: { t: 10, b: 30, l: 50 }, showlegend: false,
-        shapes: [{ type: 'rect', x0: iso(a[0], a[1]), x1: iso(b[0], b[1]), yref: 'paper', y0: 0, y1: 1, fillcolor: 'rgba(176,148,90,0.12)', line: { color: C.gold, width: 1 } }],
+        shapes: [{ type: 'rect', x0: iso(a[0], a[1]), x1: iso(b[0], b[1]), yref: 'paper', y0: 0, y1: 1, fillcolor: 'rgba(232,85,43,0.12)', line: { color: C.gold, width: 1 } }],
         xaxis: { range: ['2004-01-01', '2026-05-01'] }
       });
     });
@@ -339,7 +340,7 @@
       }).join('');
       plot(root.querySelector('#zp-c3'), [
         { x: pts.map(p => p.x), y: pts.map(p => p.y), text: pts.map(p => p.lbl), mode: 'markers', name: 'Trimestres',
-          marker: { size: 8, color: pts.map(p => p.partial ? C.coral : p.yr), colorscale: [[0, '#3b4a60'], [1, C.cyan]], line: { color: C.bg, width: 1 } },
+          marker: { size: 8, color: pts.map(p => p.partial ? C.coral : p.yr), colorscale: [[0, '#3a3f47'], [1, C.cyan]], line: { color: C.bg, width: 1 } },
           hovertemplate: '<b>%{text}</b><br>ln PIB %{x:.3f}<br>ln T %{y:.3f}<extra></extra>' },
         { x: [x0, x1], y: [r.a + r.b * x0, r.a + r.b * x1], mode: 'lines', name: `ε = ${fmt(r.b, 2)}`, line: { color: C.gold, width: 2.5 }, hoverinfo: 'skip' },
         { x: [s.x], y: [s.y], mode: 'markers', marker: { size: 18, color: 'rgba(0,0,0,0)', line: { color: C.coral, width: 3 } }, hoverinfo: 'skip', showlegend: false }
@@ -377,7 +378,7 @@
       const hd = IDX_TOT.map(v => sc.pax * v / 12 / 31 * 0.11);
       plot(root.querySelector('#zp-c4'), [{
         x: MESES, y: hd, type: 'bar', text: hd.map(v => fmt(v)), textposition: 'outside', textfont: { color: C.text, size: 11 },
-        marker: { color: hd.map((_, i) => i === m ? C.gold : i === 7 ? 'rgba(176,108,88,0.7)' : 'rgba(122,152,186,0.35)') },
+        marker: { color: hd.map((_, i) => i === m ? C.gold : i === 7 ? 'rgba(196,196,200,0.7)' : 'rgba(138,161,185,0.35)') },
         hovertemplate: '%{x}: <b>%{y:,.0f}</b> pax en la hora punta<extra></extra>'
       }], { yaxis: { title: 'HDP (pax/h)', range: [0, 520] }, margin: { t: 10 } });
       root.querySelector('#zp-r4-design').style.display = m === 7 ? '' : 'none';
@@ -716,7 +717,7 @@
       if (mode === 'total') {
         const mmK = {}; S.forEach(r => { if (r[5]) mmK[iso(r[0], r[1])] = r[5]; });
         traces = [
-          { x, y: rows.map(r => r[2] + r[3]), type: 'bar', name: 'Pasajeros totales', marker: { color: rows.map(r => r[0] === 2020 || r[0] === 2021 ? 'rgba(176,108,88,0.6)' : 'rgba(122,152,186,0.55)') }, hovertemplate: '%{x|%b %Y}: <b>%{y:,.0f}</b><extra></extra>' },
+          { x, y: rows.map(r => r[2] + r[3]), type: 'bar', name: 'Pasajeros totales', marker: { color: rows.map(r => r[0] === 2020 || r[0] === 2021 ? 'rgba(196,196,200,0.6)' : 'rgba(138,161,185,0.55)') }, hovertemplate: '%{x|%b %Y}: <b>%{y:,.0f}</b><extra></extra>' },
           { x: Object.keys(mmK), y: Object.values(mmK), mode: 'lines', name: 'Tendencia', line: { color: C.gold, width: 3 }, hovertemplate: '%{x|%b %Y}: %{y:,.0f}<extra>Tendencia</extra>' }
         ];
         ya = { title: 'Pasajeros / mes' };
@@ -772,7 +773,7 @@
         ? 'Valores del Excel: el optimista usa en su fórmula la tasa histórica del 1,55 % (ver «!»).'
         : 'Valores recalculados (cálculo propio, no figuran en el Excel).';
       plot($('zp-proj'), [
-        { x: annual.map(a => a[0]), y: annual.map(a => a[1]), name: 'Histórico Aena', mode: 'lines+markers', line: { color: C.muted, width: 2 }, marker: { size: 4 }, hovertemplate: '%{x}: <b>%{y:,.0f}</b><extra>Histórico</extra>' },
+        { x: annual.map(a => a[0]), y: annual.map(a => a[1]), name: 'Histórico Aena', mode: 'lines+markers', line: { color: '#5c5c62', width: 2 }, marker: { size: 4 }, hovertemplate: '%{x}: <b>%{y:,.0f}</b><extra>Histórico</extra>' },
         ...sc.map((s, k) => ({ x: yrs, y: yrs.map(y => PAX_2025 * Math.pow(1 + s.i, y - 2025)), name: s.label, mode: 'lines', line: { color: cols[k], width: s.user ? 3 : 2, dash: s.user ? 'dash' : 'solid' }, hovertemplate: '%{x}: <b>%{y:,.0f}</b><extra>' + s.label + '</extra>' })),
         { x: sc.map(() => Y), y: sc.map(s => PAX_2025 * Math.pow(1 + s.i, Y - 2025)), mode: 'markers', marker: { size: 9, color: cols, line: { color: C.bg, width: 2 } }, hoverinfo: 'skip', showlegend: false }
       ], {
@@ -806,7 +807,7 @@
         ? `${r.n} trimestres. Por cada 1 % de PIB, el tráfico varía un ${fmt(r.b, 2)} %. La nube es dispersa: el PIB explica solo una parte (R² = ${fmt(r.r2, 2)}).`
         : `Contraste con un año completo móvil (${r.n} puntos). La pendiente es cálculo propio: el Excel solo dibuja esta gráfica.`;
       plot($('zp-pib'), [
-        { x: pts.map(p => p.x), y: pts.map(p => p.y), text: pts.map(p => p.q), mode: 'markers', marker: { size: 8, color: pts.map(p => p.q === '2025 T4' ? C.coral : p.yr), colorscale: [[0, '#3b4a60'], [1, C.cyan]], line: { color: C.bg, width: 1 } }, hovertemplate: '<b>%{text}</b><br>ln PIB %{x:.3f}<br>%{y:.3f}<extra></extra>' },
+        { x: pts.map(p => p.x), y: pts.map(p => p.y), text: pts.map(p => p.q), mode: 'markers', marker: { size: 8, color: pts.map(p => p.q === '2025 T4' ? C.coral : p.yr), colorscale: [[0, '#3a3f47'], [1, C.cyan]], line: { color: C.bg, width: 1 } }, hovertemplate: '<b>%{text}</b><br>ln PIB %{x:.3f}<br>%{y:.3f}<extra></extra>' },
         { x: [x0, x1], y: [r.a + r.b * x0, r.a + r.b * x1], mode: 'lines', line: { color: C.gold, width: 2.5 }, hoverinfo: 'skip' }
       ], { showlegend: false, xaxis: { title: 'ln PIB' }, yaxis: { title: pibv === 'mm' ? 'ln media móvil trimestral' : 'TAM = ln(Σ 4 trimestres)', separatethousands: false } });
     }

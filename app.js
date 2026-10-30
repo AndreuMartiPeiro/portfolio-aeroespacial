@@ -13,57 +13,81 @@
   const backBtn = document.getElementById('navbar-back');
   const brandLink = document.getElementById('navbar-brand');
 
-  // ========== Stars Background ==========
-  function initStars() {
-    const canvas = document.getElementById('stars-canvas');
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    let stars = [];
-    const STAR_COUNT = 200;
+  const navbar = document.getElementById('navbar');
+  const progressBar = document.getElementById('scroll-progress');
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // Paleta de gráficos: mismos valores que los tokens de styles.css
+  const CHART = {
+    accent: '#e8552b', tertiary: '#8aa1b9', text: '#ededec', muted: '#8e8e93',
+    grid: 'rgba(255, 255, 255, 0.07)', surface: '#19191b'
+  };
+  const pad2 = n => String(n).padStart(2, '0');
+  const ARROW_SVG = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>';
 
-    function resize() {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
+  // ========== Navbar, progreso de lectura y anclas ==========
+  function initChrome() {
+    let lastY = window.scrollY;
+    let ticking = false;
+
+    function onScroll() {
+      const y = window.scrollY;
+      const max = document.documentElement.scrollHeight - window.innerHeight;
+      navbar.classList.toggle('is-scrolled', y > 12);
+      // Se oculta al bajar y reaparece al subir
+      const hide = y > lastY && y > 240;
+      navbar.classList.toggle('is-hidden', hide);
+      document.body.classList.toggle('nav-hidden', hide);
+      progressBar.style.setProperty('--progress', max > 0 ? Math.min(y / max, 1) : 0);
+      lastY = y;
+      ticking = false;
     }
+    window.addEventListener('scroll', () => {
+      if (!ticking) { requestAnimationFrame(onScroll); ticking = true; }
+    }, { passive: true });
+    onScroll();
 
-    function createStars() {
-      stars = [];
-      for (let i = 0; i < STAR_COUNT; i++) {
-        stars.push({
-          x: Math.random() * canvas.width,
-          y: Math.random() * canvas.height,
-          size: Math.random() * 1.5 + 0.3,
-          speed: Math.random() * 0.3 + 0.05,
-          opacity: Math.random() * 0.8 + 0.2,
-          twinkleSpeed: Math.random() * 0.02 + 0.005,
-          twinkleOffset: Math.random() * Math.PI * 2
-        });
-      }
-    }
-
-    let time = 0;
-    function draw() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      time += 0.016;
-      stars.forEach(s => {
-        const twinkle = 0.5 + 0.5 * Math.sin(time * s.twinkleSpeed * 60 + s.twinkleOffset);
-        ctx.beginPath();
-        ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(230, 225, 215, ${s.opacity * twinkle})`;
-        ctx.fill();
-        s.y -= s.speed;
-        if (s.y < -5) {
-          s.y = canvas.height + 5;
-          s.x = Math.random() * canvas.width;
+    // Anclas internas (#id) sin interferir con el router (#/…)
+    document.addEventListener('click', e => {
+      const a = e.target.closest('a[href^="#"]');
+      if (a) {
+        const href = a.getAttribute('href');
+        if (href.length > 1 && !href.startsWith('#/')) {
+          const target = document.getElementById(href.slice(1));
+          if (target) { e.preventDefault(); target.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+          return;
         }
-      });
-      requestAnimationFrame(draw);
-    }
+      }
+      if (e.target.closest('[data-scroll-top]')) window.scrollTo({ top: 0, behavior: 'smooth' });
 
-    resize();
-    createStars();
-    draw();
-    window.addEventListener('resize', () => { resize(); createStars(); });
+      // Desplegables (pasos y subpasos)
+      const toggle = e.target.closest('[data-toggle]');
+      if (toggle) {
+        const card = toggle.parentElement;
+        const open = card.classList.toggle('expanded');
+        toggle.setAttribute('aria-expanded', open);
+      }
+    });
+    document.addEventListener('keydown', e => {
+      const toggle = e.target.closest && e.target.closest('[data-toggle]');
+      if (toggle && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); toggle.click(); }
+    });
+  }
+
+  // ========== Revelado al hacer scroll ==========
+  const revealObserver = 'IntersectionObserver' in window
+    ? new IntersectionObserver(entries => entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+          revealObserver.unobserve(entry.target);
+        }
+      }), { threshold: 0.12, rootMargin: '0px 0px -40px 0px' })
+    : null;
+
+  function observeReveals(root) {
+    root.querySelectorAll('.reveal:not(.is-visible)').forEach(el => {
+      if (revealObserver && !reducedMotion) revealObserver.observe(el);
+      else el.classList.add('is-visible');
+    });
   }
 
   // ========== Render Landing ==========
@@ -73,34 +97,51 @@
     grid.innerHTML = '';
 
     PROJECTS.forEach((project, index) => {
-      const card = document.createElement('div');
-      card.className = 'project-card';
-      card.style.animationDelay = `${0.1 + index * 0.1}s`;
+      const card = document.createElement('article');
+      card.className = 'project-card reveal';
+      card.style.setProperty('--d', `${(index % 2) * 120}ms`);
       card.setAttribute('data-project-id', project.id);
+      card.setAttribute('role', 'link');
+      card.setAttribute('tabindex', '0');
+      card.setAttribute('aria-label', project.title);
 
       const tagsHTML = project.tags.map(t => `<span class="tag">${t}</span>`).join('');
+      const done = /complet/i.test(project.status) ? ' is-done' : '';
 
       card.innerHTML = `
-        <div class="project-card-image">
-          <img src="${project.image}" alt="${project.title}" onerror="this.parentElement.innerHTML='<div class=\\'image-placeholder\\'><span class=\\'image-placeholder-icon\\'>—</span><span>Imagen del proyecto</span></div>'" />
-          <span class="project-card-status">${project.status}</span>
+        <div class="project-card-media">
+          <img src="${project.image}" alt="${project.title}" loading="lazy" onerror="this.parentElement.innerHTML='<div class=\\'image-placeholder\\'><span class=\\'image-placeholder-icon\\'>—</span><span>Imagen del proyecto</span></div>'" />
+          <span class="project-card-status${done}">${project.status}</span>
         </div>
         <div class="project-card-body">
-          <h3 class="project-card-title">${project.title}</h3>
-          <p class="project-card-desc">${project.description}</p>
-          <div class="project-card-tags">${tagsHTML}</div>
-        </div>
-        <div class="project-card-footer">
-          <span class="project-card-date">${project.date}</span>
-          <span class="project-card-arrow">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-          </span>
+          <span class="project-card-index">${pad2(index + 1)}</span>
+          <div>
+            <h3 class="project-card-title">${project.title}</h3>
+            <p class="project-card-desc">${project.description}</p>
+            <div class="project-card-foot">
+              <div class="project-card-tags">${tagsHTML}</div>
+              <span class="project-card-cta">Ver proyecto ${ARROW_SVG}</span>
+            </div>
+          </div>
         </div>
       `;
 
       card.addEventListener('click', () => navigateTo(project.id));
+      card.addEventListener('keydown', e => { if (e.key === 'Enter') navigateTo(project.id); });
       grid.appendChild(card);
     });
+
+    observeReveals(grid);
+  }
+
+  // Coloca la línea naranja bajo la pestaña activa
+  function syncTabIndicator() {
+    const tabsEl = document.getElementById('section-tabs');
+    const indicator = tabsEl && tabsEl.querySelector('.section-tabs-indicator');
+    const active = tabsEl && tabsEl.querySelector('.section-tab.active');
+    if (!indicator || !active) return;
+    indicator.style.setProperty('--x', `${active.offsetLeft}px`);
+    indicator.style.setProperty('--w', `${active.offsetWidth}px`);
   }
 
   // ========== Render Project ==========
@@ -121,26 +162,45 @@
 
     // Hero
     const tagsHTML = project.tags.map(t => `<span class="tag">${t}</span>`).join('');
+    const index = PROJECTS.indexOf(project) + 1;
+    const mediaHTML = project.image
+      ? `<div class="project-hero-media"><img src="${project.image}" alt="${project.title}" /></div>`
+      : '';
     heroEl.innerHTML = `
-      <h1>${project.title}</h1>
-      <p class="project-subtitle">${project.subtitle}</p>
-      <div class="project-hero-tags">${tagsHTML}</div>
+      <div class="project-hero-meta">
+        <span class="eyebrow"><span class="dot"></span>Proyecto ${pad2(index)} — ${project.date}</span>
+        <span class="eyebrow">${project.status}</span>
+      </div>
+      <h1><span class="line"><span>${project.title}</span></span></h1>
+      <div class="project-hero-row">
+        <p class="project-subtitle">${project.subtitle}</p>
+        <div class="project-hero-tags">${tagsHTML}</div>
+      </div>
+      ${mediaHTML}
     `;
 
-    // Tabs
-    tabsEl.innerHTML = '';
+    // Tabs con indicador deslizante
+    tabsEl.innerHTML = '<span class="section-tabs-indicator" aria-hidden="true"></span>';
     project.sections.forEach((section, i) => {
       const tab = document.createElement('button');
+      tab.type = 'button';
+      tab.setAttribute('role', 'tab');
       tab.className = 'section-tab' + (i === 0 ? ' active' : '');
       const statusHTML = section.status ? `<span class="section-tab-status">${section.status}</span>` : '';
-      tab.innerHTML = `<span class="section-tab-icon">${i + 1}</span> ${section.title}${statusHTML}`;
+      tab.innerHTML = `<span class="section-tab-icon">${pad2(i + 1)}</span>${section.title}${statusHTML}`;
       tab.addEventListener('click', () => {
         tabsEl.querySelectorAll('.section-tab').forEach(t => t.classList.remove('active'));
         tab.classList.add('active');
+        syncTabIndicator();
         renderSection(section, contentEl);
+        // Si las pestañas están fijadas arriba, vuelve al inicio del apartado
+        const top = tabsEl.getBoundingClientRect().top + window.scrollY - navbar.offsetHeight;
+        if (window.scrollY > top + 1) window.scrollTo({ top, behavior: 'smooth' });
       });
       tabsEl.appendChild(tab);
     });
+    requestAnimationFrame(syncTabIndicator);
+    if (document.fonts) document.fonts.ready.then(syncTabIndicator);
 
     // Render first section
     if (project.sections.length > 0) {
@@ -212,11 +272,7 @@
       </div>
     `;
 
-    // Re-trigger animations
-    container.querySelectorAll('.timeline-item').forEach(item => {
-      item.style.opacity = '0';
-      requestAnimationFrame(() => { item.style.opacity = ''; });
-    });
+    observeReveals(container);
 
     // Initialize Plotly charts after DOM is ready
     requestAnimationFrame(() => {
@@ -228,31 +284,31 @@
   function renderNormalStep(step, i) {
     let imagesHTML = '';
     if (step.images && step.images.length > 0) {
-      imagesHTML = step.images.map(img => `<div class="timeline-card-image" style="margin-top: 1rem;"><img src="${img}" alt="${step.title}" /></div>`).join('');
+      imagesHTML = step.images.map(img => `<div class="timeline-card-image"><img src="${img}" alt="${step.title}" loading="lazy" /></div>`).join('');
     } else if (step.image) {
-      imagesHTML = `<div class="timeline-card-image" style="margin-top: 1rem;"><img src="${step.image}" alt="${step.title}" onerror="this.parentElement.outerHTML='<div class=\\'image-placeholder\\'><span class=\\'image-placeholder-icon\\'>—</span><span>Imagen pendiente</span></div>'" /></div>`;
+      imagesHTML = `<div class="timeline-card-image"><img src="${step.image}" alt="${step.title}" onerror="this.parentElement.outerHTML='<div class=\\'image-placeholder\\'><span class=\\'image-placeholder-icon\\'>—</span><span>Imagen pendiente</span></div>'" /></div>`;
     }
 
     const contentHTML = step.contentHTML ? `<div class="custom-html-content">${step.contentHTML}</div>` : '';
     const descHTML = step.description ? `<p class="timeline-card-desc">${step.description}</p>` : '';
 
     return `
-      <div class="timeline-item" style="animation-delay: ${0.1 + i * 0.1}s">
+      <div class="timeline-item reveal" style="--d: ${Math.min(i, 5) * 70}ms">
         <div class="timeline-dot"></div>
         <div class="timeline-card expandable-card">
-          <div class="timeline-card-header" onclick="this.parentElement.classList.toggle('expanded')">
+          <div class="timeline-card-header" data-toggle role="button" tabindex="0" aria-expanded="false">
             <div>
-              <div class="timeline-step-number">Paso ${i + 1}</div>
-              <h3 class="timeline-card-title" style="margin-bottom: 0;">${step.title}</h3>
+              <div class="timeline-step-number">Paso ${pad2(i + 1)}</div>
+              <h3 class="timeline-card-title">${step.title}</h3>
             </div>
-            <div class="expand-icon-wrapper">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="expand-icon"><path d="m6 9 6 6 6-6"/></svg>
-            </div>
+            <span class="expand-icon-wrapper" aria-hidden="true"></span>
           </div>
-          <div class="timeline-card-body">
+          <div class="timeline-card-body collapse">
+            <div class="collapse-inner"><div class="timeline-card-content">
             ${descHTML}
             ${contentHTML}
             ${imagesHTML}
+            </div></div>
           </div>
         </div>
       </div>
@@ -292,18 +348,18 @@
       step.substeps.forEach((sub, j) => {
         substepsHTML += `
           <div class="parametric-substep expandable-card">
-            <div class="parametric-substep-header" onclick="this.parentElement.classList.toggle('expanded')">
+            <div class="parametric-substep-header" data-toggle role="button" tabindex="0" aria-expanded="false">
               <div>
-                <div class="parametric-substep-number">${j + 1} de ${step.substeps.length}</div>
+                <div class="parametric-substep-number">${pad2(j + 1)} / ${pad2(step.substeps.length)}</div>
                 <h4 class="parametric-substep-title">${sub.title}</h4>
               </div>
-              <div class="expand-icon-wrapper">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="expand-icon"><path d="m6 9 6 6 6-6"/></svg>
-              </div>
+              <span class="expand-icon-wrapper" aria-hidden="true"></span>
             </div>
-            <div class="parametric-substep-body">
-              <p class="parametric-substep-desc">${sub.description}</p>
-              <div class="chart-container" id="${sub.chartId}" data-chart-type="${sub.chartType}" data-chart-config="${sub.chartConfig}"></div>
+            <div class="parametric-substep-body collapse">
+              <div class="collapse-inner"><div class="parametric-substep-content">
+                <p class="parametric-substep-desc">${sub.description}</p>
+                <div class="chart-container" id="${sub.chartId}" data-chart-type="${sub.chartType}" data-chart-config="${sub.chartConfig}"></div>
+              </div></div>
             </div>
           </div>
         `;
@@ -311,24 +367,24 @@
     }
 
     return `
-      <div class="timeline-item" style="animation-delay: ${0.1 + i * 0.1}s">
+      <div class="timeline-item reveal" style="--d: ${Math.min(i, 5) * 70}ms">
         <div class="timeline-dot"></div>
         <div class="timeline-card expandable-card">
-          <div class="timeline-card-header" onclick="this.parentElement.classList.toggle('expanded')">
+          <div class="timeline-card-header" data-toggle role="button" tabindex="0" aria-expanded="false">
             <div>
-              <div class="timeline-step-number">Paso ${i + 1}</div>
-              <h3 class="timeline-card-title" style="margin-bottom: 0;">${step.title}</h3>
+              <div class="timeline-step-number">Paso ${pad2(i + 1)}</div>
+              <h3 class="timeline-card-title">${step.title}</h3>
             </div>
-            <div class="expand-icon-wrapper">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="expand-icon"><path d="m6 9 6 6 6-6"/></svg>
-            </div>
+            <span class="expand-icon-wrapper" aria-hidden="true"></span>
           </div>
-          <div class="timeline-card-body">
+          <div class="timeline-card-body collapse">
+            <div class="collapse-inner"><div class="timeline-card-content">
             <p class="timeline-card-desc">${step.description}</p>
             ${downloadHTML}
             <div class="parametric-substeps">
               ${substepsHTML}
             </div>
+            </div></div>
           </div>
         </div>
       </div>
@@ -378,17 +434,18 @@
 
     const data = PARAMETRIC_DATA;
     const darkLayout = {
-      paper_bgcolor: 'rgba(13, 13, 13, 0)',
-      plot_bgcolor: 'rgba(26, 26, 26, 0.3)',
-      font: { family: 'Inter, sans-serif', color: '#e0ddd9', size: 12 },
+      paper_bgcolor: 'rgba(0, 0, 0, 0)',
+      plot_bgcolor: 'rgba(0, 0, 0, 0)',
+      font: { family: 'Inter, sans-serif', color: CHART.text, size: 12 },
+      hoverlabel: { bgcolor: CHART.surface, bordercolor: CHART.accent, font: { family: 'Inter, sans-serif', color: CHART.text } },
       margin: { l: 65, r: 30, t: 50, b: 65 },
       scene: {
-        xaxis: { gridcolor: 'rgba(199,91,57,0.15)', title: { font: { size: 12 } } },
-        yaxis: { gridcolor: 'rgba(199,91,57,0.15)', title: { font: { size: 12 } } },
-        zaxis: { gridcolor: 'rgba(199,91,57,0.15)', title: { font: { size: 12 } } },
-        bgcolor: 'rgba(13,13,13,0)'
+        xaxis: { gridcolor: CHART.grid, title: { font: { size: 12 } } },
+        yaxis: { gridcolor: CHART.grid, title: { font: { size: 12 } } },
+        zaxis: { gridcolor: CHART.grid, title: { font: { size: 12 } } },
+        bgcolor: 'rgba(0,0,0,0)'
       },
-      modebar: { bgcolor: 'transparent', color: '#9a9590', activecolor: '#c75b39' }
+      modebar: { bgcolor: 'transparent', color: CHART.muted, activecolor: CHART.accent }
     };
 
     const plotlyConfig = {
@@ -400,11 +457,11 @@
 
     if (config === 'tsfc') {
       renderSurface3D(el, data, 'TSFC', 'TSFC [g/(kN*s)]', 'Análisis Paramétrico: Consumo Específico (TSFC)',
-        [[0, '#0d47a1'], [0.25, '#1976d2'], [0.5, '#4fc3f7'], [0.75, '#fff176'], [1, '#e53935']],
+        [[0, '#26303b'], [0.3, '#4f6378'], [0.55, CHART.tertiary], [0.8, '#d9cfc7'], [1, CHART.accent]],
         darkLayout, plotlyConfig);
     } else if (config === 'thrust') {
       renderSurface3D(el, data, 'Thrust', 'Net Thrust [kN]', 'Análisis Paramétrico: Empuje Neto',
-        [[0, '#b71c1c'], [0.25, '#e65100'], [0.5, '#ff8f00'], [0.75, '#fdd835'], [1, '#fff9c4']],
+        [[0, '#1f1f22'], [0.3, '#45454a'], [0.6, '#8e8e93'], [0.85, '#c9c9cc'], [1, '#f2f2f0']],
         darkLayout, plotlyConfig);
     } else if (config === 'carpet') {
       renderCarpetPlot(el, data, darkLayout, plotlyConfig);
@@ -441,10 +498,10 @@
       y: [data.designPoint.PR],
       z: [zKey === 'TSFC' ? data.designPoint.TSFC : data.designPoint.Thrust],
       mode: 'markers+text',
-      marker: { size: 6, color: '#ff1744', symbol: 'diamond' },
+      marker: { size: 6, color: CHART.accent, symbol: 'diamond', line: { color: '#ffffff', width: 1 } },
       text: ['F107-WR-402'],
       textposition: 'top center',
-      textfont: { color: '#ff1744', size: 11, family: 'Inter' },
+      textfont: { color: CHART.accent, size: 11, family: 'JetBrains Mono, monospace' },
       hovertemplate: '<b>Punto de Diseño F107</b><br>TET: 1227 K<br>HP PR: 6.06<br>' + zLabel + ': ' +
         (zKey === 'TSFC' ? '22.83' : '2.90') + '<extra></extra>',
       showlegend: false
@@ -452,7 +509,7 @@
 
     const surfaceLayout = {
       ...layout,
-      title: { text: title, font: { size: 14, color: '#e0ddd9' }, x: 0.5 },
+      title: { text: title, font: { size: 14, color: CHART.text, family: 'Inter Tight, Inter, sans-serif' }, x: 0.03, xanchor: 'left' },
       scene: {
         ...layout.scene,
         xaxis: { ...layout.scene.xaxis, title: 'Burner Exit Temperature [K]' },
@@ -481,7 +538,7 @@
         x: xVals,
         y: yVals,
         mode: 'lines',
-        line: { color: 'rgba(25, 118, 210, 0.6)', width: 1.2 },
+        line: { color: 'rgba(138, 161, 185, 0.75)', width: 1.2 },
         hovertemplate: `TET = ${data.TET[j].toFixed(0)} K<br>Thrust: %{x:.3f} kN<br>TSFC: %{y:.3f} g/(kN*s)<extra></extra>`,
         showlegend: false
       });
@@ -499,7 +556,7 @@
         x: xVals,
         y: yVals,
         mode: 'lines',
-        line: { color: 'rgba(224, 221, 217, 0.4)', width: 1 },
+        line: { color: 'rgba(237, 237, 236, 0.32)', width: 1 },
         hovertemplate: `HP PR = ${data.PR[i].toFixed(2)}<br>Thrust: %{x:.3f} kN<br>TSFC: %{y:.3f} g/(kN*s)<extra></extra>`,
         showlegend: false
       });
@@ -511,28 +568,28 @@
       x: [data.designPoint.Thrust],
       y: [data.designPoint.TSFC],
       mode: 'markers+text',
-      marker: { size: 12, color: '#ff1744', symbol: 'star' },
+      marker: { size: 13, color: CHART.accent, symbol: 'star', line: { color: '#ffffff', width: 1 } },
       text: ['  F107-WR-402 (Diseño)'],
       textposition: 'middle right',
-      textfont: { color: '#ff1744', size: 12, family: 'Inter, sans-serif' },
+      textfont: { color: CHART.accent, size: 12, family: 'JetBrains Mono, monospace' },
       hovertemplate: '<b>Punto de Diseño F107</b><br>Thrust: 2.90 kN<br>TSFC: 22.83 g/(kN*s)<br>TET: 1227 K<br>HP PR: 6.06<extra></extra>',
       showlegend: false
     });
 
     const carpetLayout = {
       ...layout,
-      title: { text: 'Carpet Plot: Thrust vs TSFC', font: { size: 14, color: '#e0ddd9' }, x: 0.5 },
+      title: { text: 'Carpet Plot: Thrust vs TSFC', font: { size: 14, color: CHART.text, family: 'Inter Tight, Inter, sans-serif' }, x: 0.03, xanchor: 'left' },
       xaxis: {
         title: { text: 'Net Thrust [kN]', font: { size: 12 } },
-        gridcolor: 'rgba(199,91,57,0.12)',
-        zerolinecolor: 'rgba(199,91,57,0.2)',
-        color: '#e0ddd9'
+        gridcolor: CHART.grid,
+        zerolinecolor: CHART.grid,
+        color: CHART.muted
       },
       yaxis: {
         title: { text: 'Sp. Fuel Consumption [g/(kN*s)]', font: { size: 12 } },
-        gridcolor: 'rgba(199,91,57,0.12)',
-        zerolinecolor: 'rgba(199,91,57,0.2)',
-        color: '#e0ddd9'
+        gridcolor: CHART.grid,
+        zerolinecolor: CHART.grid,
+        color: CHART.muted
       }
     };
 
@@ -548,32 +605,37 @@
     }
   }
 
-  function handleRoute() {
+  function showRoute() {
     const hash = window.location.hash || '#/';
     const projectMatch = hash.match(/#\/project\/(.+)/);
+    const onProject = !!projectMatch;
 
-    if (projectMatch) {
-      const projectId = projectMatch[1];
-      landingView.style.display = 'none';
-      projectView.style.display = 'block';
-      projectView.classList.add('active');
-      backBtn.classList.add('visible');
-      renderProject(projectId);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    } else {
-      document.body.classList.remove('zgz-mode');
-      landingView.style.display = 'block';
-      projectView.style.display = 'none';
-      projectView.classList.remove('active');
-      backBtn.classList.remove('visible');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
+    landingView.style.display = onProject ? 'none' : 'block';
+    projectView.style.display = onProject ? 'block' : 'none';
+    projectView.classList.toggle('active', onProject);
+    backBtn.classList.toggle('visible', onProject);
+    document.body.classList.toggle('on-project', onProject);
+    if (onProject) renderProject(projectMatch[1]);
+    else document.body.classList.remove('zgz-mode');
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  }
+
+  // Fundido corto entre vistas (se omite en la primera carga)
+  let firstRoute = true;
+  function handleRoute() {
+    if (firstRoute || reducedMotion) { firstRoute = false; showRoute(); return; }
+    app.classList.add('is-leaving');
+    setTimeout(() => {
+      showRoute();
+      requestAnimationFrame(() => app.classList.remove('is-leaving'));
+    }, 320);
   }
 
   // ========== Init ==========
   function init() {
-    initStars();
+    initChrome();
     renderLanding();
+    observeReveals(document);
     handleRoute();
 
     window.addEventListener('hashchange', handleRoute);
@@ -581,8 +643,10 @@
     backBtn.addEventListener('click', () => navigateTo(''));
     brandLink.addEventListener('click', (e) => {
       e.preventDefault();
-      navigateTo('');
+      if ((window.location.hash || '#/') === '#/') window.scrollTo({ top: 0, behavior: 'smooth' });
+      else navigateTo('');
     });
+    window.addEventListener('resize', syncTabIndicator);
 
     // Update stats
     const statProjects = document.getElementById('stat-projects');
